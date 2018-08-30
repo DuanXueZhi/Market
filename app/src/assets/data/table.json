@@ -1,0 +1,29 @@
+goods:
+{
+  "_id": String,//商品_id（系统生成）
+  "productId": String,//商品号(若是一号多色，要加上颜色)
+  "productName": String,//商品名
+  "productNameFirstSpell": String,//品名首拼
+  "productNameFullSpell": String,//品名全拼
+  "productSeller": String,//厂商
+  "productImage": Array,//商品图片
+  [
+    String,String,.....
+  ],
+  "productDetails": String,//商品详情
+  "productColor": String,//商品颜色
+  "productSpecifications": Array,//商品规格
+  [
+    {
+      "size": String,//商品尺码
+      "num": Number,//商品此尺码的数量
+    }
+  ],
+  "productGenre": String,//商品分类
+  "productOriginalPrice": Number,//商品进价
+  "productBatchPrice": Number,//商品批量售价
+  "productSoloPrice": Number,//商品零售价
+  "userId": String,//商品操作者
+  "productExplain": String,//商品备注
+  "exist": Boolean,//是否存在（删除时使用）
+}

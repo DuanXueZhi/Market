@@ -1,0 +1,302 @@
+/*圆角*/
+.border_radius(@radius: 2px) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+}
+.border_radius(@radius1,@radius2,@radius3,@radius4) {
+  border-radius: @arguments;
+  -moz-border-radius: @arguments;
+  -webkit-border-radius: @arguments;
+}
+.box_shadow(@val) {
+  box-shadow: @val;
+  -moz-box-shadow: @val;
+  -webkit-box-shadow: @val;
+  -o-box-shadow: @val;
+  -mis-box-shadow: @val;
+}
+.box_shadow(@val1,@val2) {
+  box-shadow: @val1,@val2;
+  -moz-box-shadow: @val1,@val2;
+  -webkit-box-shadow: @val1,@val2;
+  -o-box-shadow: @val1,@val2;
+  -mis-box-shadow: @val1,@val2;
+}
+/*左三角形*/
+.triangle-left(@borderWidth,@bgColor){
+  border-right:@borderWidth solid @bgColor;
+  border-top:@borderWidth solid transparent;
+  border-bottom:@borderWidth solid transparent;
+}
+/*右三角形*/
+.triangle-right(@borderWidth,@bgColor){
+  border-left:@borderWidth solid @bgColor;
+  border-top:@borderWidth solid transparent;
+  border-bottom:@borderWidth solid transparent;
+}
+/*上三角形*/
+.triangle-top(@borderWidth,@bgColor){
+  border-right:@borderWidth solid transparent;
+  border-left:@borderWidth solid transparent;
+  border-bottom:@borderWidth solid @bgColor;
+}
+/*下三角形*/
+.triangle-bottom(@borderWidth,@bgColor){
+  border-right:@borderWidth solid transparent;
+  border-left:@borderWidth solid transparent;
+  border-top:@borderWidth solid @bgColor;
+}
+/*y轴2d旋转动画函数*/
+.rotate(@y-begin,@y-end,@name){
+  @keyframes @name{
+    from {
+      transform: rotate(@y-begin);
+    }
+    to {
+      transform: rotate(@y-end);
+    }
+  }
+  @-webkit-keyframes @name{
+    from {
+      transform: rotate(@y-begin);
+    }
+    to {
+      transform: rotate(@y-end);
+    }
+  }
+  @-moz-keyframes @name{
+    from {
+      transform: rotate(@y-begin);
+    }
+    to {
+      transform: rotate(@y-end);
+    }
+  }
+  @-o-keyframes @name{
+    from {
+      transform: rotate(@y-begin);
+    }
+    to {
+      transform: rotate(@y-end);
+    }
+  }
+}
+/*动画延迟函数*/
+.animation(@n:fly,@t:2s,@fn:ease-in-out,@i:infinite,@dur:alternate){
+  animation: @n @t @fn @i @dur;
+  -webkit-animation: @n @t @fn @i @dur;
+  -o-animation: @n @t @fn @i @dur;
+  -moz-animation: @n @t @fn @i @dur;
+}
+/*animation: toOpacity 8s 2s infinite both;
+  animation: 1s .5s linear forwards vanis, 1s 1.5s linear toBig;*/
+/*动画名字， 动画播放时间，延迟时间，播放次数，both：设置对象状态为动画结束或开始的状态，结束时状态优先*/
+.animation(@n,@t){
+  animation: @n @t;
+  -webkit-animation: @n @t;
+  -o-animation: @n @t;
+  -moz-animation: @n @t;
+}
+
+/*css3动画过度效果*/
+.transition(@prop,@time){
+  -webkit-transition: @prop @time;
+  -moz-transition: @prop @time;
+  -ms-transition: @prop @time;
+  -o-transition: @prop @time;
+  transition: @prop @time;
+}
+
+/*旋转函数*/
+.transform(@num){
+  -webkit-transform: rotate(@num);
+  -moz-transform: rotate(@num);
+  -ms-transform: rotate(@num);
+  -o-transform: rotate(@num);
+  transform: rotate(@num);
+}
+
+/*圆角*/
+.border_radius(@radius: 2px) {
+  border-radius: @radius;
+  -moz-border-radius: @radius;
+  -webkit-border-radius: @radius;
+}
+.border_radius(@radius1,@radius2,@radius3,@radius4) {
+  border-radius: @arguments;
+  -moz-border-radius: @arguments;
+  -webkit-border-radius: @arguments;
+}
+.box_shadow(@val) {
+  box-shadow: @val;
+  -moz-box-shadow: @val;
+  -webkit-box-shadow: @val;
+  -o-box-shadow: @val;
+  -mis-box-shadow: @val;
+}
+.box_shadow(@val1,@val2) {
+  box-shadow: @val1,@val2;
+  -moz-box-shadow: @val1,@val2;
+  -webkit-box-shadow: @val1,@val2;
+  -o-box-shadow: @val1,@val2;
+  -mis-box-shadow: @val1,@val2;
+}
+//弹性
+.display_flex{
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  /*兼容IE*/
+  display: flex;
+}
+//弹性居中（水平、垂直两个方向）
+.flex_center{
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  align-items: center;
+  -webkit-align-items: center;
+}
+//铺满
+.all_filled{
+  width: 100%;
+  height: 100%;
+}
+//透明
+.opacity(@opacity){
+  -moz-opacity: @opacity;
+  -webkit-opacity: @opacity;
+  opacity: @opacity;
+}
+.box-sizing(@val: border-box) {
+  -webkit-box-sizing: @val;
+  -moz-box-sizing: @val;
+  box-sizing: @val;
+}
+.flex(@val) {
+  -webkit-box-flex: @val;
+  -moz-box-flex: @val;
+  flex: @val;
+}
+.transform(@a,...) {
+  transform: @arguments;
+  -ms-transform: @arguments;
+  -webkit-transform: @arguments;
+  -o-transform: @arguments;
+  -moz-transform: @arguments;
+}
+.animate(@animate){
+  -webkit-animation: @animate;
+  -moz-animation: @animate;
+  -ms-animation: @animate;
+  animation: @animate;
+}
+/**过度*/
+.transition(@a,...) {
+  transition: @arguments;
+  -webkit-transition: @arguments;
+  -moz-transition: @arguments;
+}
+/*左三角形*/
+.triangle-left(@borderWidth,@bgColor){
+  border-right:@borderWidth solid @bgColor;
+  border-top:@borderWidth solid transparent;
+  border-bottom:@borderWidth solid transparent;
+}
+/*右三角形*/
+.triangle-right(@borderWidth,@bgColor){
+  border-left:@borderWidth solid @bgColor;
+  border-top:@borderWidth solid transparent;
+  border-bottom:@borderWidth solid transparent;
+}
+/*上三角形*/
+.triangle-top(@borderWidth,@bgColor){
+  border-right:@borderWidth solid transparent;
+  border-left:@borderWidth solid transparent;
+  border-bottom:@borderWidth solid @bgColor;
+}
+/*下三角形*/
+.triangle-bottom(@borderWidth,@bgColor){
+  border-right:@borderWidth solid transparent;
+  border-left:@borderWidth solid transparent;
+  border-top:@borderWidth solid @bgColor;
+}
+/*渐变*/
+.linear-gradient(@point :top ,@startColor,@endColor) {
+  background: -webkit-linear-gradient(@point,@startColor,@endColor);
+  background: -moz-linear-gradient(@point,@startColor,@endColor);
+  background: -ms-linear-gradient(@point,@startColor,@endColor);
+  filter: ~"progid: DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr=@{startColor}, endColorstr=@{endColor})";
+  background: linear-gradient(@point,@startColor,@endColor);
+  background: @endColor;
+}
+.linear-gradientMore(@a,...){
+  background: -webkit-linear-gradient(@arguments);
+  background: -moz-linear-gradient(@arguments);
+  background: -ms-linear-gradient(@arguments);
+  background: linear-gradient(@arguments);
+}
+
+.perspective(@val) {
+  -webkit-perspective: @val;
+  -moz-perspective: @val;
+  -o-perspective: @val;
+  -ms-perspective: @val;
+  perspective: @val;
+}
+.transition-delay(@a,...) {
+  -webkit-transition-delay: @arguments;
+  -moz-transition-delay: @arguments;
+  -o-transition-delay: @arguments;
+  -ms-transition-delay: @arguments;
+  transition-delay: @arguments;
+}
+/*超出省略号*/
+.overEllipsis{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+/*多行文本超出省略号*/
+.overEllipsisMul(@clampNum: 2){
+  overflow : hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: @clampNum;
+  -webkit-box-orient: vertical;
+}
+.border_onepx(@color: @ms-color){
+  border: 1px solid @color;
+}
+.rotate_fn(@color: 0deg){
+  transform:rotate(45deg);
+  -ms-transform:rotate(45deg);     /* IE 9 */
+  -moz-transform:rotate(45deg);     /* Firefox */
+  -webkit-transform:rotate(45deg); /* Safari 和 Chrome */
+  -o-transform:rotate(45deg);     /* Opera */
+}
+.font_weight(@weight:500){
+  font-weight:@weight
+}
+.font_color(@color:white){
+  color: @color;
+}
+/*解决加padding后div被撑开*/
+.border_box{
+  -moz-box-sizing: border-box; /*Firefox3.5+*/
+  -webkit-box-sizing: border-box; /*Safari3.2+*/
+  -o-box-sizing: border-box; /*Opera9.6*/
+  -ms-box-sizing: border-box; /*IE8*/
+  box-sizing: border-box;
+}
+
+/*文字水平、垂直居中*/
+.align-items{
+  display:flex;/*Flex布局*/
+  display: -webkit-flex; /* Safari */
+  align-items:center;/*指定垂直居中*/
+  justify-content: center;/*flex布局后文字水平居中*/
+}
