@@ -4,16 +4,14 @@
 * */
 import Vue from 'vue'
 // loading文件
-import maskingVue from './loading/Masking' // 基础蒙版
 import normalLoadingVue from './loading/NormalLoading' // 正常加载（加载中...）
 // window文件
-import warningWindowVue from './window/WarningWindow' // 警告弹窗
+import warningRemindWindowVue from './window/WarningRemindWindow' // 警告弹窗
 
-const masking = Vue.extend(maskingVue) // 将vue文件作为构造器的参数
-const normalLoading = Vue.extend(normalLoadingVue)
-const warningWindow = Vue.extend(warningWindowVue)
+const normalLoading = Vue.extend(normalLoadingVue) // 将vue文件作为构造器的参数
+const warningRemindWindow = Vue.extend(warningRemindWindowVue)
 
-export default {masking, normalLoading, warningWindow}
+export default {normalLoading, warningRemindWindow}
 
 /*
 * 笔记

@@ -5,7 +5,7 @@
     <div>
       <p>之后要写成组件拼接进来，后期要根据身份来确定菜单显示的内容，“游客”不能显示进货单</p>
       <router-link :to="{name: 'GoodsList'}">查看商品列表</router-link>
-      <router-link>查看进货列表</router-link>
+      <router-link to="">查看进货列表</router-link>
     </div>
     <!--主体-->
     <router-view></router-view>

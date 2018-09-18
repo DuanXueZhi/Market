@@ -2,8 +2,6 @@
 * 由段学智创建于2018/07/23
 * 整个系统的公用函数
 * */
-import Vue from 'vue'
-var bus = new Vue() // 关闭弹窗及蒙版函数（时使用）[想着从windowFn.js（公用函数）中调用，但都是公用函数，还是不要有横向联系]
 /*
 * 系统中所用函数
 * */
@@ -421,8 +419,8 @@ const fnChangeSpell = (chinese) => {
       for (var name in PinYin) {
         if (PinYin[name].indexOf(v) !== -1) { // 匹配出拼音
           // 首字母大写
-          nameFullSpell += this.fnUcFirst(name)[0]
-          nameFirstSpell += this.fnUcFirst(name)[1]
+          nameFullSpell += fnUcFirst(name)[0]
+          nameFirstSpell += fnUcFirst(name)[1]
         }
       }
     } else {
@@ -447,6 +445,5 @@ const fnUcFirst = function (l1) {
 /*
 * 公用组件中所用的函数
 * */
-
 
 export default {fnChangeSpell, fnUcFirst}

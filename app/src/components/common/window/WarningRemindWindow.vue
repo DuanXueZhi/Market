@@ -1,0 +1,130 @@
+<template>
+    <div id="WarningRemindWindow" v-if="show">
+      <p class="AppAllExplain">{{msg}}</p>
+      <div class="AllBaseBackgroundMasking" v-on:click="close"></div><!--公用蒙版，样式代码在base.less文件中-->
+      <div class="window">
+        <p class="AppAllExplain">{{msg}}内部</p>
+        <div class="head">
+          <span class="close" v-on:click="close">×</span>
+        </div>
+        <div class="body">
+          <div class="title">
+            <span v-bind:style="{color: titleColor}"><i class="iconfont icon-jinggao"></i></span>
+            <span class="titleText">{{titleText}}</span>
+          </div>
+          <p class="contentText">{{contentText}}</p>
+        </div>
+        <div class="footer">
+          <div class="warning" v-if="titleText === '警告'">
+            <span class="confirm" v-on:click="confirmAgree">{{operateText}}</span>
+            <span class="cancel" v-on:click="close">取消</span>
+          </div>
+          <div class="remind" v-if="titleText === '提示'">
+            <span class="confirm" v-on:click="close">{{operateText}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+</template>
+
+<script>
+export default {
+  name: 'warning-remind-window',
+  data () {
+    return {
+      msg: '警告or提示弹窗小组件',
+      show: false, // 是否显示
+      titleColor: '', // 标题图标的颜色
+      titleText: '', // 标题文字
+      contentText: '', // 内容文字
+      operateText: '' // 操作按钮文字
+    }
+  },
+  mounted: function () {
+
+  },
+  methods: {
+    // 确认
+    confirmAgree () {
+      console.log('警告弹窗中点击确认')
+      this.$windowFn.bus.$emit('confirmAgree', 'W-RWindow组件中警告弹窗中点击确认')
+      this.close() // 关闭弹窗
+    },
+    // 取消or关闭
+    close () {
+      console.log('关闭弹窗')
+      this.show = false
+    }
+  }
+}
+</script>
+
+<style scoped lang="less">
+@import '../../../assets/less/main';
+
+#WarningRemindWindow{
+  .window{
+    z-index: 11; /*Masking蒙版部分是10*/
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 50%;
+    margin: auto;
+    .transform(translate(0, -50%));
+    width: 500px;
+    background: #fff;
+    .border_radius(8px);
+    overflow: hidden;
+    text-align: center;
+    .head{
+      height: 40px;
+      border-bottom: 1px solid #666;
+      background: @color-secondary;
+      .close{
+        float: right;
+        margin-right: 10px;
+        font-size: 30px;
+        cursor: pointer;
+        color: #fff;
+      }
+      .close:hover{
+
+      }
+    }
+    .body{
+      padding: 10px 20px;
+      text-align: center;
+      .title{
+        font-size: 20px;
+        font-weight: 700;
+        .titleText{
+          margin-left: 4px;
+        }
+      }
+      .contentText{
+        padding: 20px 0;
+      }
+    }
+    .footer{
+      padding-bottom: 20px;
+      .warning,.remind{
+        >span{
+          border: 1px solid @color-secondary;
+          padding: 4px 10px;
+          .border_radius(4px);
+          cursor: pointer;
+          &.confirm{
+            background: @color-secondary;
+            color: #fff;
+            margin-right: 4px;
+          }
+          &.cancel{
+            color: @color-secondary;
+            margin-left: 4px;
+          }
+        }
+      }
+    }
+  }
+}
+</style>

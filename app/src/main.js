@@ -13,8 +13,6 @@ import jsfn from './assets/js/jsfn' // 全局引入公用函数
 import sendRequest from './assets/js/sendRequest' // 全局引入发送请求函数
 import windowFn from './assets/js/windowFn' // 全局引入弹窗函数
 
-import './assets/commonComponents/index' // 实验(案例公共蒙版)
-
 Vue.config.productionTip = false
 Vue.prototype.$http = axios // 将axios绑定到原型上
 Vue.prototype.$jsfn = jsfn // 将jsfn函数文件绑定到原型上

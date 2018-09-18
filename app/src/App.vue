@@ -2,7 +2,14 @@
   <div id="app">
     <p class="AppAllExplain">{{msg}}</p>
     <router-view></router-view>
-    <div style="height: 150px; margin: 10px 0; color: red;display: inline-block;width: 150px" v-bind:style="{backgroundColor: item}" v-for="(item, index) in colorId">{{index}}：{{item}}</div>
+    <!--色板-->
+    <!--目前所用色调-->
+    <div>
+      <div style="height: 150px; margin: 10px 0; color: red;display: inline-block;width: 150px;background-color: rgba(61, 83, 99, 1)">主色调：午夜蓝</div>
+      <div style="height: 150px; margin: 10px 0; color: red;display: inline-block;width: 150px;background-color: rgba(86, 113, 143, 1)">副色调：普鲁士蓝</div>
+    </div>
+    <!--选色板-->
+    <div style="height: 150px; margin: 10px 4px; color: red;display: inline-block;width: 150px;" v-bind:style="{backgroundColor: item}" v-for="(item, index) in colorId" :key="item">{{index}}：{{item}}</div>
   </div>
 </template>
 
@@ -16,10 +23,10 @@ export default {
         '#FFFFFF', '#FF0000', '#00FF00', '#0000FF',
         '#FF00FF', '#00FFFF', '#FFFF00', '#000000',
         '#70DB93', '#5C3317', '#9F5F9F', '#B5A642',
-        '#D9D919', '#A67D3D', '#8C7853', '#A67D3D',
-        '#5F9F9F', '#D98719', '#B87333', '#FF7F00',
-        '#42426F', '#5C4033', '#3D5363', '#56718F',
-        '#4682B4', '#27446E', '#D0E9FF'
+        '#D9D919', '#A67D3D', '#8C7853', '#5F9F9F',
+        '#D98719', '#B87333', '#FF7F00', '#42426F',
+        '#5C4033', '#3D5363', '#56718F', '#4682B4',
+        '#27446E', '#D0E9FF', '#643E3B', '#005737'
       ]
     }
   }

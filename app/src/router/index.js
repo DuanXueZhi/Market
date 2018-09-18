@@ -38,7 +38,7 @@ export default new Router({
       name: 'ListShow',
       component: ListShow,
       children: [
-        {// 商品列表
+        { // 商品列表
           path: 'GoodsList',
           name: 'GoodsList',
           component: GoodsList
