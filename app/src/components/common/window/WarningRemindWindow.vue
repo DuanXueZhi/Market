@@ -9,17 +9,24 @@
         </div>
         <div class="body">
           <div class="title">
-            <span v-bind:style="{color: titleColor}"><i class="iconfont icon-jinggao"></i></span>
+            <span v-bind:style="{color: titleColor}" v-if="titleText === '警告' || titleText === '提示'"><i class="iconfont icon-jinggao"></i></span>
+            <span v-bind:style="{color: titleColor}" v-if="titleText === '恭喜'"><i class="iconfont icon-chenggongicon"></i></span>
             <span class="titleText">{{titleText}}</span>
           </div>
-          <p class="contentText">{{contentText}}</p>
+          <div class="contentTextBox" v-if="typeof contentText === 'string'">
+            <p>{{contentText}}</p>
+          </div>
+          <div class="contentTextBox" v-if="typeof contentText === 'object'">
+            <p>{{contentText.text}}</p>
+            <p class="imageListBox"><span class="imageEachBox" v-for="(item, index) in contentText.image" :key="item[index]"><img :src="item" alt=""></span></p>
+          </div>
         </div>
         <div class="footer">
           <div class="warning" v-if="titleText === '警告'">
             <span class="confirm" v-on:click="confirmAgree">{{operateText}}</span>
             <span class="cancel" v-on:click="close">取消</span>
           </div>
-          <div class="remind" v-if="titleText === '提示'">
+          <div class="remind" v-if="titleText === '提示' || titleText === '恭喜'">
             <span class="confirm" v-on:click="close">{{operateText}}</span>
           </div>
         </div>
@@ -78,7 +85,6 @@ export default {
     text-align: center;
     .head{
       height: 40px;
-      border-bottom: 1px solid #666;
       background: @color-secondary;
       .close{
         float: right;
@@ -92,6 +98,7 @@ export default {
       }
     }
     .body{
+      border-top: 1px solid #666;
       padding: 10px 20px;
       text-align: center;
       .title{
@@ -101,25 +108,38 @@ export default {
           margin-left: 4px;
         }
       }
-      .contentText{
-        padding: 20px 0;
+      .contentTextBox{
+        padding: 20px 10px;
+        .imageListBox{
+          margin-top: 10px;
+          .imageEachBox{
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            margin: 0 5px;
+            >img{
+              width: 100%;
+              height: 100%;
+            }
+          }
+        }
       }
     }
     .footer{
       padding-bottom: 20px;
       .warning,.remind{
         >span{
-          border: 1px solid @color-secondary;
+          border: 1px solid @color-secondary; // 使用副色调
           padding: 4px 10px;
           .border_radius(4px);
           cursor: pointer;
           &.confirm{
-            background: @color-secondary;
+            background: @color-secondary-tint; // 使用副色调
             color: #fff;
             margin-right: 4px;
           }
           &.cancel{
-            color: @color-secondary;
+            color: @color-secondary; // 使用副色调
             margin-left: 4px;
           }
         }

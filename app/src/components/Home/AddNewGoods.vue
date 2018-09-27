@@ -1,84 +1,85 @@
 <template>
-    <div id="AddNewGoods">
-      <p class="AppAllExplain">{{msg}}</p>
-      <!--数据写法-->
-      <div>
-        <h3>新品上架</h3>
-        <div style="text-align: center;">
-          <p>货号<span style="color: red;" v-if="!productId">*</span>：</p>
-          <input type="text" placeholder="productId" v-model="productId"><span style="color: red;" v-if="mustFilled === 'id'">此项必填</span>
-          <p>商品名<span style="color: red;" v-if="!productName">*</span>：</p>
-          <input type="text" placeholder="productName" v-model="productName"><span style="color: red;" v-if="mustFilled === 'name'">此项必填</span>
-          <p>厂商：</p>
-          <input type="text" placeholder="productSeller" v-model="productSeller">
-          <div>
-            <p>商品图片：</p>
-            <ul>
-              <!--已输入个数-->
-              <li>
+  <div id="AddNewGoods">
+    <p class="AppAllExplain">{{msg}}</p>
+    <!--数据写法-->
+    <div>
+      <h3>新品上架</h3>
+      <div style="text-align: center;">
+        <p>货号<span style="color: red;" v-if="!productId">*</span>：</p>
+        <input type="text" placeholder="productId" v-model="productId"><span style="color: red;" v-if="mustFilled === 'id'">此项必填</span>
+        <p>商品名<span style="color: red;" v-if="!productName">*</span>：</p>
+        <input type="text" placeholder="productName" v-model="productName"><span style="color: red;" v-if="mustFilled === 'name'">此项必填</span>
+        <p>厂商：</p>
+        <input type="text" placeholder="productSeller" v-model="productSeller">
+        <div>
+          <p>商品图片：</p>
+          <ul>
+            <!--已输入个数-->
+            <li>
                 <span>{{(successBase64Image.length === 0)? '未上传任何图片' : '已上传成功'}}</span
                 ><span style="color: red;">{{successBase64Image.length}}</span
-                ><span>张，</span>
-              </li>
-              <!--已输入部分-->
-              <li style="display: inline-block;margin-left: 20px;position: relative;" v-for="(item, index) in successBase64Image" :key="item" v-on:mouseenter="deleteImgBtn = index" v-on:mouseleave="deleteImgBtn = false">
-                <img style="display: inline-block;width: 200px;height: 200px;border: 1px solid black;" v-bind:src="item" v-bind:alt="item">
-                <!--<span  v-if="deleteImgBtn" style="display: inline-block;border-radius: 50%;background: red;color: rgb(255, 255, 255);padding: 0 6px;font-size: 22px;font-weight: 600;position: absolute;top: -12px;right: -13px;">×</span>-->
-                <span style="position: absolute;top: -9px;right: -8px;color: red;cursor: pointer;background: #fff;-webkit-border-radius: 50%;-moz-border-radius: 50%;border-radius: 50%;" v-if="deleteImgBtn === index" v-on:click="deleteImage(index)"><i class="iconfont icon-biaodanzhongyichu"></i></span>
-              </li>
-              <!--输入框-->
-              <li style="position: relative;display: inline-block;" v-for="(item, index) in uploadNum" :key="item" v-if="index + 1 === uploadNum">
-                <input type="file" style="opacity: 0;border: 1px solid red;width: 50px;height: 50px;position: absolute;right: 0;" v-on:change="uploadImage">
-                <span style="display: inline-block;border: 1px solid black;padding: 0 12px;font-size: 42px;">+</span>
-              </li>
-            </ul>
-          </div>
-          <p>详情：</p>
-          <input type="text" placeholder="productDetails" v-model="productDetails">
+            ><span>张，</span>
+            </li>
+            <!--已输入部分-->
+            <li style="display: inline-block;margin-left: 20px;position: relative;" v-for="(item, index) in successBase64Image" :key="item" v-on:mouseenter="deleteImgBtn = index" v-on:mouseleave="deleteImgBtn = false">
+              <img style="display: inline-block;width: 200px;height: 200px;border: 1px solid black;" v-bind:src="item" v-bind:alt="item">
+              <!--<span  v-if="deleteImgBtn" style="display: inline-block;border-radius: 50%;background: red;color: rgb(255, 255, 255);padding: 0 6px;font-size: 22px;font-weight: 600;position: absolute;top: -12px;right: -13px;">×</span>-->
+              <span style="position: absolute;top: -9px;right: -8px;color: red;cursor: pointer;background: #fff;-webkit-border-radius: 50%;-moz-border-radius: 50%;border-radius: 50%;" v-if="deleteImgBtn === index" v-on:click="deleteImage(index)"><i class="iconfont icon-biaodanzhongyichu"></i></span>
+            </li>
+            <!--输入框-->
+            <li style="position: relative;display: inline-block;" v-for="(item, index) in uploadNum" :key="item" v-if="index + 1 === uploadNum">
+              <input type="file" style="opacity: 0;border: 1px solid red;width: 50px;height: 50px;position: absolute;right: 0;" v-on:change="uploadImage">
+              <span style="display: inline-block;border: 1px solid black;padding: 0 12px;font-size: 42px;">+</span>
+            </li>
+          </ul>
+        </div>
+        <p>详情：</p>
+        <input type="text" placeholder="productDetails" v-model="productDetails">
+        <div>
+          <p>颜色：</p>
+          <input type="text" placeholder="productColor" v-model="productColor"
+          ><span style="margin-left: 6px; color: green; font-size: 14px;" v-if="productColor !== '' && serverColorData.indexOf(productColor) === -1">新颜色</span>
+          <br>
+          <button style="width: 60px; height: 24px; margin: 2px 5px;" v-for="(color, index) in serverColorData" :key="color.value" :title="index + 1" @click="productColor = color">{{color}}</button>
+        </div>
+        <div>
+          <p>分类：</p>
+          <input type="text" placeholder="productGenre" v-model="productGenre"
+          ><span style="margin-left: 6px; color: green; font-size: 14px;" v-if="productGenre !== '' && serverGenreData.indexOf(productGenre) === -1">新分类</span>
+          <br>
+          <button style="width: 60px; height: 24px; margin: 2px 5px;" v-for="(genre, index) in serverGenreData" :key="genre.value" :title="index + 1" @click="productGenre = genre">{{genre}}</button>
+        </div>
+        <div style="display: inline-block; width: 600px; text-align: left;">
+          <p>商品规格：</p>
           <div>
-            <p>颜色：</p>
-            <input type="text" placeholder="productColor" v-model="productColor"
-            ><span style="margin-left: 6px; color: green; font-size: 14px;" v-if="productColor !== '' && serverColorData.indexOf(productColor) === -1">新颜色</span>
-            <br>
-            <button style="width: 60px; height: 24px; margin: 2px 5px;" v-for="(color, index) in serverColorData" :key="color.value" :title="index + 1" @click="productColor = color">{{color}}</button>
-          </div>
-          <div>
-            <p>分类：</p>
-            <input type="text" placeholder="productGenre" v-model="productGenre"
-            ><span style="margin-left: 6px; color: green; font-size: 14px;" v-if="productGenre !== '' && serverGenreData.indexOf(productGenre) === -1">新分类</span>
-            <br>
-            <button style="width: 60px; height: 24px; margin: 2px 5px;" v-for="(genre, index) in serverGenreData" :key="genre.value" :title="index + 1" @click="productGenre = genre">{{genre}}</button>
-          </div>
-          <div style="display: inline-block; width: 600px; text-align: left;">
-            <p>商品规格：</p>
-            <div>
               <span>所有规格：</span
               ><input type="text" v-model="ruleSizes"
-              ><span>总数（条）：</span
-              ><input type="number" v-model="productSum"
-              ><button @click="distributeRule(ruleSizes, productSum)">确定</button>
-            </div>
-            <div v-for="(item, index) in productSpecifications" :key="item.size[index]">
-              <span>尺码{{index + 1}}：</span
-              ><input type="text" v-model="item.size"
-              ><span>数量（条）：</span
-              ><input type="number" v-model="item.number" v-on:blur="countProductSum">
-            </div>
-            <span @click="addSpecifications"><i class="iconfont icon-tianjia" style="font-size: 22px;"></i></span>
+          ><span>总数（条）：</span
+          ><input type="number" v-model="productSum"
+          ><button @click="distributeRule(ruleSizes, productSum)">确定</button>
           </div>
-          <p>进价（元）：</p>
-          <input type="number" placeholder="productOriginalPrice" v-model="productOriginalPrice">
-          <p>批量售价（元）：</p>
-          <input type="number" placeholder="productBatchPrice" v-model="productBatchPrice">
-          <p>零售价（元）：</p>
-          <input type="number" placeholder="productSoloPrice" v-model="productSoloPrice">
-          <p>备注：</p>
-          <input type="text" placeholder="productExplain" v-model="productExplain">
-          <br><button @click="addGoods">提交</button>
-          <img style="display: inline-block; width: 100px; height: 100px;" v-for="image in uploadSuccessImage" :key="image" v-bind:src="image" alt="">
+          <div v-for="(item, index) in productSpecifications" :key="item.size[index]">
+              <span>尺码{{index + 1}}：</span
+              ><input type="text" v-model="item.size" v-on:blur="countProductSize"
+          ><span>数量（条）：</span
+          ><input type="number" v-model="item.number" v-on:blur="countProductSum"
+          ><span @click="deleteSpecifications(index)"><i class="iconfont icon-jianshao" style="color: red; margin-left: 10px; cursor: pointer;"></i></span>
+          </div>
+          <span @click="addSpecifications"><i class="iconfont icon-tianjia" style="font-size: 22px; cursor: pointer;"></i></span>
         </div>
+        <p>进价（元）：</p>
+        <input type="number" placeholder="productOriginalPrice" v-model="productOriginalPrice">
+        <p>批量售价（元）：</p>
+        <input type="number" placeholder="productBatchPrice" v-model="productBatchPrice">
+        <p>零售价（元）：</p>
+        <input type="number" placeholder="productSoloPrice" v-model="productSoloPrice">
+        <p>备注：</p>
+        <input type="text" placeholder="productExplain" v-model="productExplain">
+        <br><button @click="addGoods">提交</button>
+        <img style="display: inline-block; width: 100px; height: 100px;" v-for="image in uploadSuccessImage" :key="image" v-bind:src="image" alt="">
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -98,7 +99,7 @@ export default {
       productDetails: '', // 商品详情
       productColor: '', // 商品颜色
       productSpecifications: [ // 商品规格
-        {size: '', number: ''}
+        {size: '', number: 0}
       ],
       productGenre: '', // 商品分类
       productOriginalPrice: 0, // 商品进价
@@ -122,7 +123,7 @@ export default {
   },
   created () {
     // 获取标签（数据库中已有的字段值）
-    this.$sendRequest.RTSGet('/rm_goods/find_title', '').then(res => {
+    this.$sendRequest.RTSGet('/rm_goods/find_title', {userId: '用户id'}).then(res => {
       // console.log('查询颜色、分类字段标签值')
       if (res.data.code === 0) {
         // console.log('查询成功!')
@@ -172,7 +173,7 @@ export default {
       console.log('拆分整合规格数据')
       var sizeArray = sizes.split(',') // 尺码数组（转化而来）
       var eachSizeNumber = parseInt(sum / sizeArray.length) // 均分总数（便利用户操作）
-      sizeArray.forEach((e, index) => {
+      sizeArray.forEach((e, index) => { // 给productSpecifications赋值
         this.productSpecifications[index].size = e
         this.productSpecifications[index].number = eachSizeNumber
         if (this.productSpecifications.length < sizeArray.length) {
@@ -186,20 +187,43 @@ export default {
       }
     },
 
+    // 更新尺码个数及值
+    countProductSize () {
+      console.log('更新尺码个数及值')
+      this.ruleSizes = '' // 清空一下值
+      this.productSpecifications.forEach((e, index) => {
+        if (index < this.productSpecifications.length - 1) {
+          this.ruleSizes += e.size + ','
+        } else {
+          this.ruleSizes += e.size
+        }
+      })
+    },
+
     // 计算总数
     countProductSum () {
       console.log('计算总数函数')
-      this.productSum = Number(this.productSum) // 转换类型
+      this.productSum = 0 // 清空一下原值避免叠加
+      this.productSum = Number(this.productSum) // 转换总数类型
       this.productSpecifications.forEach(e => {
-        console.log(e.number, typeof e.number, typeof this.productSum);
+        e.number = Number(e.number)
+        console.log(e.number, typeof e.number, typeof this.productSum)
         this.productSum += e.number
       })
     },
 
     // 添加规格({尺码:'', 数量:''})
     addSpecifications () {
-      console.log('添加一个规格输入框')
+      // console.log('添加一个规格输入框')
       this.productSpecifications.push({size: '', number: ''})
+    },
+
+    // 删除规格
+    deleteSpecifications (ruleIndex) {
+      // console.log('删除第' + ruleIndex + '个规格输入框')
+      this.productSpecifications.splice(ruleIndex, 1)
+      this.countProductSize() // 计算尺码
+      this.countProductSum() // 计算数量
     },
 
     // 提交商品
@@ -215,6 +239,7 @@ export default {
           // 封装到productData对象
           this.productData.productId = this.productId // 商品Id
           this.productData.productName = this.productName // 商品名
+          this.productData.productNameAddId = this.productName + this.productName // 商品名+id
           this.productData.productNameFirstSpell = this.productNameFirstSpell // 商品首拼（生成）
           this.productData.productNameFullSpell = this.productNameFullSpell // 品名全拼（生成）
           this.productData.productSeller = this.productSeller // 厂商
@@ -231,10 +256,11 @@ export default {
           this.productData.exist = this.exist // 是否存在（删除时使用）
           console.log(this.productData)
           // 发送请求并接收参数
-          // this.$sendRequest.RTSPost('/rm_goods/add_goods', this.productData).then(res => {
-          //   console.log(res)
-          //   this.uploadSuccessImage = res.data.image
-          // })
+          this.$sendRequest.RTSPost('/rm_goods/add_goods', this.productData).then(res => {
+            console.log(res)
+            this.uploadSuccessImage = res.data.image
+            this.$windowFn.allWindow('AddNewGoods', '恭喜', {text: '已成功添加' + this.productName + this.productId + '商品', image: res.data.image}, '知道了') // 触发弹窗函数以提醒用户
+          })
         } else {
           // console.log('productName为空')
           this.mustFilled = 'name'

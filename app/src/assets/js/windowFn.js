@@ -44,12 +44,21 @@ const allWindow = function (fatherLabel, category, content, operate) { // 参数
         })
       })
     case '提示': // 提示弹窗（提示一下用户，调用时无需等待回调）使用页面：['./src/components/Home/AddNewGoods.vue']
-      console.log('windowFn.js中引用提示弹窗')
-      option.titleColor = 'orange'
+      // console.log('windowFn.js中引用提示弹窗')
+      option.titleColor = 'orange' // 更改传参中提示颜色
       var remindWindowComponent = new WarningRemindWindow({
         data: option
       }).$mount()
       document.querySelector(label).appendChild(remindWindowComponent.$el)
+      break
+    case '恭喜': //  祝贺弹窗（提示用户操作成功， 无需等待回调）使用页面：['./src/components/Home/AddNewGoods.vue']
+      console.log('windowFn.js中引用恭喜弹窗')
+      option.titleColor = 'green' // 更改传参中提示颜色
+      var congratulateWindowComponent = new WarningRemindWindow({
+        data: option
+      }).$mount()
+      document.querySelector(label).appendChild(congratulateWindowComponent.$el)
+      break
   }
 }
 

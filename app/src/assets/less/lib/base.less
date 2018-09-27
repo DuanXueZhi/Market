@@ -126,7 +126,9 @@
 @color-primary-warning: rgba(255, 83, 99, 1);
 @color-primary-caution: rgba(255, 255, 99, 1);
 /*副色调：普鲁士蓝*/
-@color-secondary: rgba(86, 113, 143, 1);
+@color-secondary: #56718f; /*rgba(86, 113, 143, 1)*/
+@color-secondary-tint: @color-secondary + #333333; /*浅色副色*/
+@color-secondary-deep: @color-secondary - #333333; /*深色副色*/
 
 /*弹窗和loading公用蒙版元素*/
 .AllBaseBackgroundMasking{
