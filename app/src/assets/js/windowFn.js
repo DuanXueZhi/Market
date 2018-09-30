@@ -39,7 +39,7 @@ const allWindow = function (fatherLabel, category, content, operate) { // 参数
       document.querySelector(label).appendChild(warningWindowComponent.$el)
       // 返回一个回调函数需要有Promise和resolve
       return new Promise(resolve => {
-        bus.$on('confirmAgree', (e) => {
+        bus.$on('windows-confirmAgree', (e) => { // 监控兄弟组件（windows-confirmAgree）传值
           resolve(e)
         })
       })

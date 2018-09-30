@@ -75,9 +75,9 @@
               <!--<td>{{product.productNameFullSpell}}</td>-->
               <!--<td>{{product.__v}}</td>-->
               <td>
-                <button @click="operateProduct('update', product._id)">修改</button>
-                <button @click="operateProduct('delete', product._id)">删除</button>
-                <button @click="operateProduct('admin_delete', product._id)">管理员删除</button>
+                <button @click="operateProduct('update', product)">修改</button>
+                <button @click="operateProduct('delete', product)">删除</button>
+                <button @click="operateProduct('admin_delete', product)">管理员删除</button>
               </td>
             </tr>
           </tbody>
@@ -102,7 +102,7 @@ export default {
   methods: {
     // 获取数据列表函数
     getDataList () {
-      // 请求数据
+      // 请求数据（查询到数据库中exist=true的商品的所有信息boss身份用）
       this.$sendRequest.RTSGet('/rm_goods/complete_goods', {userId: '用户id'}).then(res => {
         // console.log('请求到商品全部数据')
         if (res.data.code === 0) {
@@ -117,7 +117,7 @@ export default {
     },
 
     // 删除商品函数
-    operateProduct (operate, productId) {
+    operateProduct (operate, product) {
       var vm = this
       const markedWords = function (data) { // 内部公用请求回调
         if (data.data.code === 0) {
@@ -130,12 +130,14 @@ export default {
       }
       if (operate === 'delete') {
         console.log('删除操作')
-        this.$sendRequest.RTSDelete('/rm_goods/delete_goods', {userId: '用户Id', productId: productId}).then(markedWords)
+        this.$sendRequest.RTSDelete('/rm_goods/delete_goods', {userId: '用户Id', product_id: product._id}).then(markedWords)
       } else if (operate === 'update') {
         console.log('修改操作')
       } else if (operate === 'admin_delete') {
         // console.log('管理员删除')
-        this.$sendRequest.RTSDelete('/rm_goods/delete_goods', {userId: '用户Id', productId: productId}).then(markedWords)
+        this.$windowFn.allWindow('GoodsList', '警告', '用户名作为管理员：您确定删除' + product.productName + product.productId + '商品吗？', '确定').then(res => {
+          this.$sendRequest.RTSDelete('/rm_goods/delete_goods', {userId: '用户Id', product_id: product._id}).then(markedWords)
+        })
       }
     }
   }

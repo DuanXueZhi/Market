@@ -28,7 +28,7 @@
             </li>
             <!--输入框-->
             <li style="position: relative;display: inline-block;" v-for="(item, index) in uploadNum" :key="item" v-if="index + 1 === uploadNum">
-              <input type="file" style="opacity: 0;border: 1px solid red;width: 50px;height: 50px;position: absolute;right: 0;" v-on:change="uploadImage">
+              <input type="file" style="opacity: 0;border: 1px solid red;width: 50px;height: 50px;position: absolute;right: 0;" v-on:change="uploadImage" accept="image/*"> <!-- 仅支持所有图片文件 -->
               <span style="display: inline-block;border: 1px solid black;padding: 0 12px;font-size: 42px;">+</span>
             </li>
           </ul>
@@ -77,6 +77,7 @@
         <input type="text" placeholder="productExplain" v-model="productExplain">
         <br><button @click="addGoods">提交</button>
         <img style="display: inline-block; width: 100px; height: 100px;" v-for="image in uploadSuccessImage" :key="image" v-bind:src="image" alt="">
+        <input type="file" @change="testUploadImage">
       </div>
     </div>
   </div>
@@ -304,6 +305,28 @@ export default {
         this.picture = res.data.image
         console.log(this.picture)
       })
+    },
+    testUploadImage (event) {
+      let file = event.target.files[0]
+      console.log(event)
+      console.log(event.target.files[0].size / 1024 / 1024)
+      let reader = new FileReader()
+      // var xhr = new XMLHttpRequest()
+      // 读取图片
+      reader.readAsDataURL(file) // 发起异步请求（读取图片）
+      reader.onloadend = (e) => { // 读取完了以后开始转为base64
+        console.log('读取完了以后开始转为base64')
+        if (this.successBase64Image.indexOf(reader.result) === -1) {
+          console.log('正常写入数组中')
+          this.successBase64Image.push(reader.result)
+          // this.successBase64Image[this.uploadNum - 1] = reader.result
+          this.uploadNum++
+        } else {
+          console.log('与原来图片重复，不写入数组！')
+          this.$windowFn.allWindow('AddNewGoods', '提示', '已上传此图片，不需要再传了', '晓得了')
+        }
+        event.target.value = '' // 重置上传按钮的value值避免不能上传重复图片
+      }
     }
   }
 }

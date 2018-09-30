@@ -54,7 +54,7 @@ export default {
     // 确认
     confirmAgree () {
       console.log('警告弹窗中点击确认')
-      this.$windowFn.bus.$emit('confirmAgree', 'W-RWindow组件中警告弹窗中点击确认')
+      this.$windowFn.bus.$emit('windows-confirmAgree', 'W-RWindow组件中警告弹窗中点击确认')
       this.close() // 关闭弹窗
     },
     // 取消or关闭
