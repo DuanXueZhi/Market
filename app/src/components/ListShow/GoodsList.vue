@@ -15,6 +15,7 @@
               <th>详情</th>
               <th>颜色</th>
               <th>规格</th>
+              <th>总数</th>
               <th>分类</th>
               <th>单品进价</th>
               <th>单品批发价</th>
@@ -61,6 +62,7 @@
                   </tbody>
                 </table>
               </td>
+              <td v-bind="num = addition(product.productSpecifications)">{{num}}</td>
               <td>{{product.productGenre}}</td>
               <td>{{product.productOriginalPrice}}</td>
               <td>{{product.productBatchPrice}}</td>
@@ -135,10 +137,23 @@ export default {
         console.log('修改操作')
       } else if (operate === 'admin_delete') {
         // console.log('管理员删除')
-        this.$windowFn.allWindow('GoodsList', '警告', '用户名作为管理员：您确定删除' + product.productName + product.productId + '商品吗？', '确定').then(res => {
+        this.$windowFn.allWindow('GoodsList', 'warning', '用户名作为管理员：您确定删除' + product.productName + product.productId + '商品吗？', '确定', true).then(res => {
           this.$sendRequest.RTSDelete('/rm_goods/delete_goods', {userId: '用户Id', product_id: product._id}).then(markedWords)
         })
       }
+    },
+
+    // 商品总数计算
+    addition (addendArray) {
+      var num = 0
+      if (typeof addendArray === 'object') {
+        addendArray.forEach(e => {
+          num += e.number
+        })
+      } else {
+        console.log('数据错误')
+      }
+      return num
     }
   }
 }

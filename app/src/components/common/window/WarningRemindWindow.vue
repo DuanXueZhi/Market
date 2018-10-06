@@ -22,11 +22,11 @@
           </div>
         </div>
         <div class="footer">
-          <div class="warning" v-if="titleText === '警告'">
+          <div class="warning" v-if="callBackFn">
             <span class="confirm" v-on:click="confirmAgree">{{operateText}}</span>
             <span class="cancel" v-on:click="close">取消</span>
           </div>
-          <div class="remind" v-if="titleText === '提示' || titleText === '恭喜'">
+          <div class="remind" v-if="!callBackFn">
             <span class="confirm" v-on:click="close">{{operateText}}</span>
           </div>
         </div>
@@ -44,7 +44,8 @@ export default {
       titleColor: '', // 标题图标的颜色
       titleText: '', // 标题文字
       contentText: '', // 内容文字
-      operateText: '' // 操作按钮文字
+      operateText: '', // 操作按钮文字
+      callBackFn: false // 调用页面有无等待返回值
     }
   },
   mounted: function () {

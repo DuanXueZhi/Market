@@ -40,14 +40,14 @@
           <input type="text" placeholder="productColor" v-model="productColor"
           ><span style="margin-left: 6px; color: green; font-size: 14px;" v-if="productColor !== '' && serverColorData.indexOf(productColor) === -1">新颜色</span>
           <br>
-          <button style="width: 60px; height: 24px; margin: 2px 5px;" v-for="(color, index) in serverColorData" :key="color.value" :title="index + 1" @click="productColor = color">{{color}}</button>
+          <button style="width: 60px; height: 24px; margin: 2px 5px;" v-for="(color, index) in serverColorData" :key="color.value" :title="index + 1" @click="productColor = color" v-if="color !== ''">{{color}}</button>
         </div>
         <div>
           <p>分类：</p>
           <input type="text" placeholder="productGenre" v-model="productGenre"
           ><span style="margin-left: 6px; color: green; font-size: 14px;" v-if="productGenre !== '' && serverGenreData.indexOf(productGenre) === -1">新分类</span>
           <br>
-          <button style="width: 60px; height: 24px; margin: 2px 5px;" v-for="(genre, index) in serverGenreData" :key="genre.value" :title="index + 1" @click="productGenre = genre">{{genre}}</button>
+          <button style="width: 60px; height: 24px; margin: 2px 5px;" v-for="(genre, index) in serverGenreData" :key="genre.value" :title="index + 1" @click="productGenre = genre" v-if="genre !== ''">{{genre}}</button>
         </div>
         <div style="display: inline-block; width: 600px; text-align: left;">
           <p>商品规格：</p>
@@ -124,23 +124,35 @@ export default {
   },
   created () {
     // 获取标签（数据库中已有的字段值）
-    this.$sendRequest.RTSGet('/rm_goods/find_title', {userId: '用户id'}).then(res => {
-      // console.log('查询颜色、分类字段标签值')
-      if (res.data.code === 0) {
-        // console.log('查询成功!')
-        this.serverColorData = res.data.data.colorData
-        this.serverGenreData = res.data.data.genreData
-      } else if (res.code === 1) {
-        console.log('后台出错!')
-      } else {
-        console.log('出错')
-      }
-    })
+    this.getTitleMsg()
   },
   mounted () {
     // this.$windowFn.allWindow('AddNewGoods', '警告', '内容', '确定') // 测试
   },
   methods: {
+    /*
+    * 获取函数
+    * */
+    // 获取标签（数据库中已有的字段值）
+    getTitleMsg () {
+      // 获取标签（数据库中已有的字段值）
+      this.$sendRequest.RTSGet('/rm_goods/find_title', {userId: '用户id'}).then(res => {
+        // console.log('查询颜色、分类字段标签值')
+        if (res.data.code === 0) {
+          // console.log('查询成功!')
+          this.serverColorData = res.data.data.colorData
+          this.serverGenreData = res.data.data.genreData
+        } else if (res.code === 1) {
+          console.log('后台出错!')
+        } else {
+          console.log('出错')
+        }
+      })
+    },
+
+    /*
+    * 本页函数
+    * */
     // 上传图片
     uploadImage (event) {
       console.log('上传图片')
@@ -240,7 +252,7 @@ export default {
           // 封装到productData对象
           this.productData.productId = this.productId // 商品Id
           this.productData.productName = this.productName // 商品名
-          this.productData.productNameAddId = this.productName + this.productName // 商品名+id
+          this.productData.productNameAddId = this.productName + this.productId // 商品名+id
           this.productData.productNameFirstSpell = this.productNameFirstSpell // 商品首拼（生成）
           this.productData.productNameFullSpell = this.productNameFullSpell // 品名全拼（生成）
           this.productData.productSeller = this.productSeller // 厂商
@@ -258,9 +270,13 @@ export default {
           console.log(this.productData)
           // 发送请求并接收参数
           this.$sendRequest.RTSPost('/rm_goods/add_goods', this.productData).then(res => {
-            console.log(res)
-            this.uploadSuccessImage = res.data.image
-            this.$windowFn.allWindow('AddNewGoods', '恭喜', {text: '已成功添加' + this.productName + this.productId + '商品', image: res.data.image}, '知道了') // 触发弹窗函数以提醒用户
+            if (res.data.code === 0) {
+              // console.log('提交成功');
+              this.uploadSuccessImage = res.data.image
+              this.$windowFn.allWindow('AddNewGoods', '恭喜', {text: '已成功添加' + this.productName + this.productId + '商品', image: res.data.image}, '知道了') // 触发弹窗函数以提醒用户
+            } else {
+              console.log('提交失败')
+            }
           })
         } else {
           // console.log('productName为空')
@@ -276,7 +292,7 @@ export default {
     deleteImage (index) {
       // 警告弹窗
       // console.log('AddNewGoods.vue中引起警告弹窗')
-      this.$windowFn.allWindow('AddNewGoods', '警告', '确定删除此图片吗？', '确定').then((e) => {
+      this.$windowFn.allWindow('AddNewGoods', 'warning', '确定删除此图片吗？', '确定', true).then((e) => {
         // console.log('父元素收到返回值打印', e)
         this.successBase64Image.splice(index, 1)
       })
