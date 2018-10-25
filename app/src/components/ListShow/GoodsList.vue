@@ -62,7 +62,7 @@
                   </tbody>
                 </table>
               </td>
-              <td v-bind="num = addition(product.productSpecifications)">{{num}}</td>
+              <td>{{addition(product.productSpecifications)}}</td>
               <td>{{product.productGenre}}</td>
               <td>{{product.productOriginalPrice}}</td>
               <td>{{product.productBatchPrice}}</td>
@@ -94,7 +94,8 @@ export default {
   data () {
     return {
       msg: '商品列表界面',
-      goodsList: []
+      goodsList: [], // 商品信息数组
+      updateSubmit: false // 修改提交按钮是否可点击
     }
   },
   created () {
@@ -113,12 +114,12 @@ export default {
           this.goodsList = res.data.data
         } else if (res.data.code === 1) {
           // console.log('查询出错')
-          this.$windowFn.allWindow('GoodsList', '提示', res.data.msg + '刷新一下试试', '晓得了') // 调用一下提示弹窗
+          this.$windowFn.allWindow('GoodsList', 'remind', res.data.msg + '刷新一下试试', {agree: '晓得了', cancel: ''}) // 调用提示弹窗
         }
       })
     },
 
-    // 删除商品函数
+    // 操作（删除、修改）商品函数
     operateProduct (operate, product) {
       var vm = this
       const markedWords = function (data) { // 内部公用请求回调
@@ -127,7 +128,7 @@ export default {
           vm.getDataList() // 调用获取数据（商品）列表函数
         } else if (data.data.code === 1) {
           // console.log('删除失败')
-          this.$windowFn.allWindow('GoodsList', '提示', data.data.msg + '刷新一下试试', '晓得了') // 调用弹窗提示重试
+          this.$windowFn.allWindow('GoodsList', 'remind', data.data.msg + '刷新一下试试', {agree: '晓得了', cancel: ''}) // 调用弹窗提示重试
         }
       }
       if (operate === 'delete') {
@@ -135,10 +136,22 @@ export default {
         this.$sendRequest.RTSDelete('/rm_goods/delete_goods', {userId: '用户Id', product_id: product._id}).then(markedWords)
       } else if (operate === 'update') {
         console.log('修改操作')
+        this.$router.push({name: 'AddNewGoods', query: {_id: product._id}, params: {userId: '用户Id'}}) // 跳页修改
       } else if (operate === 'admin_delete') {
-        // console.log('管理员删除')
-        this.$windowFn.allWindow('GoodsList', 'warning', '用户名作为管理员：您确定删除' + product.productName + product.productId + '商品吗？', '确定', true).then(res => {
-          this.$sendRequest.RTSDelete('/rm_goods/delete_goods', {userId: '用户Id', product_id: product._id}).then(markedWords)
+        console.log('管理员删除')
+        this.$windowFn.allWindow(
+          'GoodsList',
+          'warning',
+          '用户名作为管理员：您确定删除' + product.productName + product.productId + '商品吗？',
+          {agree: '确定', cancel: '取消'},
+          true
+        ).then(res => { // 调用警告弹窗
+          if (res.code === 0) {
+            this.$sendRequest.RTSDelete('/rm_goods/delete_goods', {
+              userId: '用户Id',
+              product_id: product._id
+            }).then(markedWords)
+          }
         })
       }
     },
@@ -148,7 +161,11 @@ export default {
       var num = 0
       if (typeof addendArray === 'object') {
         addendArray.forEach(e => {
-          num += e.number
+          if (typeof e.number === 'number') {
+            num += e.number
+          } else {
+            num = '数据错误'
+          }
         })
       } else {
         console.log('数据错误')

@@ -26,3 +26,5 @@ new Vue({
   components: { App },
   template: '<App/>'
 })
+
+// console.log = function () {} // 屏蔽掉系统中所有console.log打印

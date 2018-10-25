@@ -9,8 +9,8 @@
         </div>
         <div class="body">
           <div class="title">
-            <span v-bind:style="{color: titleColor}" v-if="titleText === '警告' || titleText === '提示'"><i class="iconfont icon-jinggao"></i></span>
-            <span v-bind:style="{color: titleColor}" v-if="titleText === '恭喜'"><i class="iconfont icon-chenggongicon"></i></span>
+            <span v-bind:style="{color: titleColor}" v-if="windowGenre === 'warning' || windowGenre === 'remind'"><i class="iconfont icon-jinggao"></i></span>
+            <span v-bind:style="{color: titleColor}" v-if="windowGenre === 'congratulations'"><i class="iconfont icon-chenggongicon"></i></span>
             <span class="titleText">{{titleText}}</span>
           </div>
           <div class="contentTextBox" v-if="typeof contentText === 'string'">
@@ -22,12 +22,13 @@
           </div>
         </div>
         <div class="footer">
+          <!-- 此处按调用者有无等待回调来区别显示 -->
           <div class="warning" v-if="callBackFn">
-            <span class="confirm" v-on:click="confirmAgree">{{operateText}}</span>
-            <span class="cancel" v-on:click="close">取消</span>
+            <span class="confirm" v-on:click="operateBtn(true)">{{operateText.agree}}</span>
+            <span class="cancel" v-on:click="operateBtn(false)">{{operateText.cancel === ''? '取消' : operateText.cancel}}</span>
           </div>
           <div class="remind" v-if="!callBackFn">
-            <span class="confirm" v-on:click="close">{{operateText}}</span>
+            <span class="confirm" v-on:click="close">{{operateText.agree}}</span>
           </div>
         </div>
       </div>
@@ -39,12 +40,16 @@ export default {
   name: 'warning-remind-window',
   data () {
     return {
-      msg: '警告or提示弹窗小组件',
+      msg: '警告or提示or恭喜弹窗小组件',
       show: false, // 是否显示
+      windowGenre: '', // 弹框类型
       titleColor: '', // 标题图标的颜色
       titleText: '', // 标题文字
       contentText: '', // 内容文字
-      operateText: '', // 操作按钮文字
+      operateText: { // 操作按钮文字
+        agree: '', // true按钮
+        cancel: '' // false按钮
+      },
       callBackFn: false // 调用页面有无等待返回值
     }
   },
@@ -52,16 +57,33 @@ export default {
 
   },
   methods: {
-    // 确认
-    confirmAgree () {
-      console.log('警告弹窗中点击确认')
-      this.$windowFn.bus.$emit('windows-confirmAgree', 'W-RWindow组件中警告弹窗中点击确认')
-      this.close() // 关闭弹窗
-    },
-    // 取消or关闭
+    // 关闭
     close () {
       console.log('关闭弹窗')
       this.show = false
+    },
+    // 确认or取消（底部操作按钮）
+    operateBtn (option) {
+      console.log('警告弹窗中点击底部按钮操作')
+      var windowData = { // 弹框要返回的数据
+        code: 2,
+        msg: 'W-RWindow组件中异常'
+      }
+      if (option) {
+        console.log('警告弹窗中点击确认')
+        windowData = { // 更新返回值
+          code: 0,
+          msg: 'W-RWindow组件中警告弹窗中点击确认'
+        }
+      } else {
+        console.log('警告弹窗中点击确认')
+        windowData = { // 更新返回值
+          code: 1,
+          msg: 'W-RWindow组件中警告弹窗中点击取消'
+        }
+      }
+      this.$windowFn.bus.$emit('windows-confirmAgree', windowData) // 创建bus进行通讯
+      this.close() // 关闭弹窗
     }
   }
 }

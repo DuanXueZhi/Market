@@ -4,7 +4,7 @@
       <!--头部-->
       <div>
         <p>之后要写成组件拼接进来</p>
-        <router-link :to="{name: 'AddNewGoods'}">添加商品</router-link>
+        <router-link :to="{name: 'AddNewGoods', query: {_id: 'add'}}">添加商品</router-link>
         <router-link to="/ListShow">查看本店信息</router-link>
       </div>
       <!--主体-->

@@ -441,9 +441,20 @@ const fnUcFirst = function (l1) {
     return [first + spare, first]
   }
 }
+// 夹杂对象的数组深拷贝
+const fnArrayDeepCopy = function (obj) {
+  if (typeof obj !== 'object') return
+  var newObj = obj instanceof Array ? [] : {}
+  for (var key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      newObj[key] = typeof obj[key] === 'object' ? fnArrayDeepCopy(obj[key]) : obj[key]
+    }
+  }
+  return newObj
+}
 
 /*
 * 公用组件中所用的函数
 * */
 
-export default {fnChangeSpell, fnUcFirst}
+export default {fnChangeSpell, fnUcFirst, fnArrayDeepCopy}
