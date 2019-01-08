@@ -5,6 +5,7 @@
 /*
 * 系统中所用函数
 * */
+// 汉语转拼音
 const fnChangeSpell = (chinese) => {
   const PinYin = {
     'a': '\u554a\u963f\u9515',
@@ -452,9 +453,17 @@ const fnArrayDeepCopy = function (obj) {
   }
   return newObj
 }
+// 换算为当地时间戳（中国）
+const localTime = function () {
+  // 中国时间戳
+  var nowTime = new Date() // 获取时间（格林尼治时间）
+  // console.log(nowTime, new Date(nowTime).getTime())
+  var ChinaTime = new Date(nowTime).getTime() - nowTime.getTimezoneOffset() * 60 * 1000 // 将当前时间转换为时间戳并减去当前地区时差
+  return ChinaTime
+}
 
 /*
 * 公用组件中所用的函数
 * */
 
-export default {fnChangeSpell, fnUcFirst, fnArrayDeepCopy}
+export default {fnChangeSpell, fnUcFirst, fnArrayDeepCopy, localTime}

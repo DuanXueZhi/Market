@@ -18,7 +18,7 @@
           </div>
           <div class="contentTextBox" v-if="typeof contentText === 'object'">
             <p>{{contentText.text}}</p>
-            <p class="imageListBox"><span class="imageEachBox" v-for="(item, index) in contentText.image" :key="item[index]"><img :src="item" alt=""></span></p>
+            <p class="imageListBox"><span class="imageEachBox" v-for="(item, index) in contentText.image" :key="index + 'window'"><img :src="item" alt=""></span></p>
           </div>
         </div>
         <div class="footer">
@@ -76,7 +76,7 @@ export default {
           msg: 'W-RWindow组件中警告弹窗中点击确认'
         }
       } else {
-        console.log('警告弹窗中点击确认')
+        console.log('警告弹窗中点击取消')
         windowData = { // 更新返回值
           code: 1,
           msg: 'W-RWindow组件中警告弹窗中点击取消'

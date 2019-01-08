@@ -50,7 +50,7 @@ const allWindow = function ( // 参数说明：要绑定的父元素的id，弹�
   } else {
     // console.log('无回调')
   }
-  // 弹窗
+  /* --------------------------------弹窗------------------------------- */
   switch (category) { // 对弹窗类型进行判断，从而控制页面中弹窗图标的改变
     case 'warning': // 警告弹窗（删除时必须使用）使用页面：['./src/components/Home/AddNewGoods.vue', './src/components/ListShow/GoodsList.vue']
       // console.log('windowFn.js中引用警告弹窗')

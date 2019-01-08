@@ -9,7 +9,7 @@
       <div style="height: 150px; margin: 10px 0; color: red;display: inline-block;width: 150px;background-color: rgba(86, 113, 143, 1)">副色调：普鲁士蓝</div>
     </div>
     <!--选色板-->
-    <div style="height: 150px; margin: 10px 4px; color: red;display: inline-block;width: 150px;" v-bind:style="{backgroundColor: item}" v-for="(item, index) in colorId" :key="item">{{index}}：{{item}}</div>
+    <div style="height: 150px; margin: 10px 4px; color: white; display: inline-block; width: 150px;" v-bind:style="{backgroundColor: item}" v-for="(item, index) in colorId" :key="item">{{index}}：{{item}}</div>
   </div>
 </template>
 
