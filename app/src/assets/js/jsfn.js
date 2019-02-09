@@ -5,6 +5,9 @@
 /*
 * 系统中所用函数
 * */
+import store from '../Vuex/store' // 引入Vuex
+const CryptoJS = require('crypto-js') // 引用AES源码js
+
 // 汉语转拼音
 const fnChangeSpell = (chinese) => {
   const PinYin = {
@@ -461,9 +464,97 @@ const localTime = function () {
   var ChinaTime = new Date(nowTime).getTime() - nowTime.getTimezoneOffset() * 60 * 1000 // 将当前时间转换为时间戳并减去当前地区时差
   return ChinaTime
 }
+// 判断两个数组是否相同【长度、元素值(不看顺序)】
+const contrastArray = function (arr1, arr2) {
+  // console.log('判断两个数组是否相同【长度、元素值(不看顺序)】', arr1, arr2)
+  if (arr1.length === arr2.length) {
+    var arrValue = []
+    arr1.forEach(e => {
+      // console.log('a', arr2.indexOf(e))
+      arrValue.push(arr2.indexOf(e))
+    })
+    if (arrValue.indexOf('-1') === -1) {
+      // console.log('相同')
+      return true
+    } else {
+      // console.log('不同')
+      return false
+    }
+  } else {
+    // console.log('不同')
+    return false
+  }
+}
+// crypto-js加密/解密函数
+const key = CryptoJS.enc.Utf8.parse('1234123412ABCDEF') // 十六位十六进制数作为密钥
+const iv = CryptoJS.enc.Utf8.parse('ABCDEF1234123412') // 十六位十六进制数作为密钥偏移量
+// 解密方法
+const Decrypt = function (word) {
+  let encryptedHexStr = CryptoJS.enc.Hex.parse(word)
+  let srcs = CryptoJS.enc.Base64.stringify(encryptedHexStr)
+  let decrypt = CryptoJS.AES.decrypt(srcs, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 })
+  let decryptedStr = decrypt.toString(CryptoJS.enc.Utf8)
+  return decryptedStr.toString()
+}
+// 加密方法
+const Encrypt = function (word) {
+  let srcs = CryptoJS.enc.Utf8.parse(word)
+  let encrypted = CryptoJS.AES.encrypt(srcs, key, { iv: iv, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 })
+  return encrypted.ciphertext.toString().toUpperCase()
+}
+// 自Cookies中获取用户信息
+const getCookies = function () {
+  // console.log('自Cookies中获取用户信息', document.cookie)
+  if (document.cookie) {
+    var cookiesValue = {}
+    var value = document.cookie.split('; ')
+    value.forEach(e => {
+      cookiesValue[e.split('=')[0]] = Decrypt(e.split('=')[1])
+    })
+    return cookiesValue
+  } else {
+    return false
+  }
+}
+// 自Cookies中获取用户信息并更新到vuex的store中
+const updateStoreUserMsgByCookiesValue = function () {
+  // console.log('自Cookies中获取用户信息并更新到vuex的store中')
+  var userMsg = {}
+  if (getCookies()) { // 判断Cookies中有没有值
+    userMsg.userId = getCookies().userId ? getCookies().userId : ''
+    userMsg.userName = getCookies().userName ? getCookies().userName : ''
+    userMsg.identity = getCookies().identity ? getCookies().identity : ''
+  }
+  if (userMsg.userId !== '' || userMsg.userName !== '' || userMsg.identity !== '') { // 有值就更新
+    store.commit('updateUserInfo', userMsg)
+  }
+}
+// 判断用户登录
+const determineUserLoginSuccess = function (callBackFn) { // 参数：窗口数据，拒绝登录（并关闭弹窗）后执行的函数，登录成功后执行的函数
+  var operateUser = store.state.user // 从vuex中获取用户数据
+  if (operateUser.userId && operateUser.userName && operateUser.identity) {
+    console.log('jsfn用户已登录')
+    return operateUser
+  } else {
+    console.log('jsfn用户未登录', callBackFn)
+    return false
+  }
+}
 
 /*
 * 公用组件中所用的函数
 * */
 
-export default {fnChangeSpell, fnUcFirst, fnArrayDeepCopy, localTime}
+// -------------汉语转拼音，-首字母大写，夹杂对象的数组深拷贝
+export default {
+  fnChangeSpell,
+  fnUcFirst,
+  fnArrayDeepCopy,
+  localTime,
+  contrastArray,
+  Decrypt,
+  Encrypt,
+  getCookies,
+  updateStoreUserMsgByCookiesValue,
+  determineUserLoginSuccess
+}

@@ -4,12 +4,12 @@
     <router-view></router-view>
     <!--色板-->
     <!--目前所用色调-->
-    <div>
-      <div style="height: 150px; margin: 10px 0; color: red;display: inline-block;width: 150px;background-color: rgba(61, 83, 99, 1)">主色调：午夜蓝</div>
-      <div style="height: 150px; margin: 10px 0; color: red;display: inline-block;width: 150px;background-color: rgba(86, 113, 143, 1)">副色调：普鲁士蓝</div>
-    </div>
+    <!--<div>-->
+      <!--<div style="height: 150px; margin: 10px 0; color: red;display: inline-block;width: 150px;background-color: rgba(61, 83, 99, 1)">主色调：午夜蓝</div>-->
+      <!--<div style="height: 150px; margin: 10px 0; color: red;display: inline-block;width: 150px;background-color: rgba(86, 113, 143, 1)">副色调：普鲁士蓝</div>-->
+    <!--</div>-->
     <!--选色板-->
-    <div style="height: 150px; margin: 10px 4px; color: white; display: inline-block; width: 150px;" v-bind:style="{backgroundColor: item}" v-for="(item, index) in colorId" :key="item">{{index}}：{{item}}</div>
+    <!--<div style="height: 150px; margin: 10px 4px; color: white; display: inline-block; width: 150px;" v-bind:style="{backgroundColor: item}" v-for="(item, index) in colorId" :key="item">{{index}}：{{item}}</div>-->
   </div>
 </template>
 
@@ -29,6 +29,10 @@ export default {
         '#27446E', '#D0E9FF', '#643E3B', '#005737'
       ]
     }
+  },
+  created () {
+    // 先获取Cookies中的值更新到vuex的store中
+    this.$jsfn.updateStoreUserMsgByCookiesValue()
   }
 }
 </script>
@@ -79,7 +83,7 @@ export default {
     /*display: none;*/
   }
   /*
-  display:none;会让元素完全从渲染树中消失，渲染的时候不占据任何空间；
+  display: none;会让元素完全从渲染树中消失，渲染的时候不占据任何空间；
   visibility: hidden;不会让元素从渲染树消失，渲染师元素继续占据空间，只是内容不可见
   display: none;是非继承属性，子孙节点消失由于元素从渲染树消失造成，通过修改子孙节点属性无法显示；
   visibility: hidden;是继承属性，子孙节点消失由于继承了hidden，通过设置visibility: visible;可以让子孙节点显示；

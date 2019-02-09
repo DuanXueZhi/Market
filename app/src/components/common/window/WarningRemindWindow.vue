@@ -90,9 +90,9 @@ export default {
 </script>
 
 <style scoped lang="less">
-@import '../../../assets/less/main';
+  @import '../../../assets/less/main';
 
-#WarningRemindWindow{
+  #WarningRemindWindow{
   .window{
     z-index: 11; /*Masking蒙版部分是10*/
     position: fixed;
@@ -107,7 +107,7 @@ export default {
     overflow: hidden;
     text-align: center;
     .head{
-      height: 40px;
+      height: 44px;
       background: @color-secondary;
       .close{
         float: right;
@@ -157,7 +157,7 @@ export default {
           .border_radius(4px);
           cursor: pointer;
           &.confirm{
-            background: @color-secondary-tint; // 使用副色调
+            background: @color-secondary-tint; // 使用副色调浅
             color: #fff;
             margin-right: 4px;
           }

@@ -1,12 +1,12 @@
 <template>
     <div id="GoodsList">
       <p class="AppAllExplain">{{msg}}</p>
-      <!--数据写法-->
+      <!-- 数据写法 -->
       <div>
-        <!--搜索-->
+        <!-- 搜索 -->
         <div style="text-align: center; padding: 30px;">
-          <input style="padding: 5px; font-size: 18px; width: 500px;" type="text" placeholder="按商品名或商品码或品名全拼或首拼或分类搜索......" v-model="searchData.inputCondition" @keyup.enter="getProductBySearchData"
-          ><button @click="getProductBySearchData">确定</button>
+          <input style="padding: 5px; font-size: 18px; width: 500px;" type="text" placeholder="按商品名或商品码或品名全拼或首拼或分类搜索......" v-model="searchData.inputCondition" @keyup.enter="getProductBySearchData">
+          <button @click="getProductBySearchData">确定</button>
         </div>
         <div style="float: right; margin-right: 20px;">
           <button @click="switchoverProductList(false)" v-bind="{disabled: !searchData.exist}">回收站</button>
@@ -117,6 +117,7 @@
                   ></li> <!-- word-wrap:break-word; 强制换行，防止一个单词不换行 -->
                 </ul>
               </th>
+              <th style="width: 50px; border-left: 1px solid red;">所属</th>
               <th style="width: 70px; border-left: 1px solid red;">单品进价</th>
               <th style="width: 80px; border-left: 1px solid red;">单品批发价</th>
               <th style="width: 80px; border-left: 1px solid red;">单品零售价</th>
@@ -158,8 +159,8 @@
             <tr style="border: 1px solid red;" v-for="(product, index) in goodsList" :key="product._id">
               <td>{{index + 1}}</td>
               <td>
-                <div style="width: 100px; height: 100px;display: inline;" v-for="(image, index) in product.productImage" :key="image"
-                ><img style="width: 98px; height: 98px; border: 1px solid black;" :src="image" :alt="index"
+                <div style="width: 100px; height: 100px;display: inline;" v-for="(image, index) in product.productImage" :key="image" @click="showEachImage(image)"
+                ><img style="width: 98px; height: 98px; border: 1px solid black;" v-lazy="image" :alt="index"
                 ></div>
               </td>
               <td :title="product.productName">{{product.productName | textOmit(5)}}</td>
@@ -186,6 +187,7 @@
               </td>
               <td>{{addition(product.productSpecifications)}}</td>
               <td>{{product.productGenre}}</td>
+              <td :title="product.belongStore">{{product.belongStore | textOmit(5)}}</td>
               <td>{{product.productOriginalPrice}}</td>
               <td>{{product.productBatchPrice}}</td>
               <td>{{product.productSoloPrice}}</td>
@@ -329,6 +331,7 @@ export default {
 
     // 商品总数计算
     addition (addendArray) {
+      console.log('商品总数计算')
       var num = 0
       if (typeof addendArray === 'object') {
         addendArray.forEach(e => {
@@ -383,6 +386,12 @@ export default {
       console.log('切换商品展示列表（查看 已删除 vs 未删除）')
       this.searchData.exist = value // 只需要更新存在参数即可
       this.getProductBySearchData() // 获取商品通过搜索数据
+    },
+
+    // 查看商品单个图片
+    showEachImage (image) {
+      console.log('查看商品单个图片')
+      this.$windowFn.showImage('GoodsList', {image: image})
     }
   }
 }

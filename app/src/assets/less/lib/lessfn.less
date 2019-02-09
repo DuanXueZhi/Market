@@ -142,6 +142,21 @@
   -o-box-shadow: @val1,@val2;
   -mis-box-shadow: @val1,@val2;
 }
+// 文字阴影
+.text_shadow(@val) {
+  text-shadow: @val;
+  //-moz-text-shadow: @val;
+  //-webkit-text-shadow: @val;
+  //-o-text-shadow: @val;
+  //-mis-text-shadow: @val;
+}
+.text_shadow(@val1,@val2) {
+  text-shadow: @val1,@val2;
+  //-moz-text-shadow: @val1,@val2;
+  //-webkit-text-shadow: @val1,@val2;
+  //-o-text-shadow: @val1,@val2;
+  //-mis-text-shadow: @val1,@val2;
+}
 //弹性
 .display_flex{
   display: -webkit-box;

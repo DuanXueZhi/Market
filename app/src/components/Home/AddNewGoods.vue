@@ -70,9 +70,9 @@
       <div style="text-align: center;" v-if="goodsId === 'add'">
         <h4>可修改数据</h4>
         <p>货号<span style="color: red;" v-if="!productId" id="addProductId">*</span>：</p>
-        <input type="text" placeholder="productId" v-model="productId"><span style="color: red;" v-if="mustFilled === 'id'">此项必填</span>
+        <input type="text" placeholder="productId" v-model="productId" v-on:focus="mustFilled = false"><span style="color: red;" v-if="mustFilled === 'id'">此项必填</span>
         <p>商品名<span style="color: red;" v-if="!productName" id="addProductName">*</span>：</p>
-        <input type="text" placeholder="productName" v-model="productName"><span style="color: red;" v-if="mustFilled === 'name'">此项必填</span>
+        <input type="text" placeholder="productName" v-model="productName" v-on:focus="mustFilled = false"><span style="color: red;" v-if="mustFilled === 'name'">此项必填</span>
         <p>厂商：</p>
         <input type="text" placeholder="productSeller" v-model="productSeller">
         <div>
@@ -141,6 +141,7 @@
         <input type="text" placeholder="productExplain" v-model="productExplain">
         <br><button @click="addGoods" v-if="goodsId === 'add'">提交</button>
         <br><button @click="addGoods" v-if="goodsId !== 'add'">确认修改</button>
+        <p style="color: red;">提交{{mustFilled | EnglishTranslate}}为空</p>
         <!--<img style="display: inline-block; width: 100px; height: 100px;" v-for="image in uploadSuccessImage" :key="image" v-bind:src="image" alt="">-->
         <!--<input type="file" @change="testUploadImage">-->
       </div>
@@ -344,6 +345,7 @@
         </ul>
         <br><button @click="addGoods" v-if="goodsId === 'add'">提交</button>
         <br><button @click="submitUpdateGoods" v-if="goodsId !== 'add'">确认修改</button>
+        <p style="color: red;">提交{{mustFilled | EnglishTranslate}}为空</p>
         <!--<img style="display: inline-block; width: 100px; height: 100px;" v-for="image in uploadSuccessImage" :key="image" v-bind:src="image" alt="">-->
         <!--<input type="file" @change="testUploadImage">-->
       </div>
@@ -362,6 +364,7 @@ export default {
       msg: '添加新商品界面',
       productId: '', // 商品号(若是一号多色，要加上颜色)
       productName: '', // 商品名 // 品名首拼（生成） // 品名全拼（生成）
+      belongStore: '通过用户身份判断得到第一店长即店铺名称', //  商品所属商家
       productSeller: '', // 厂商
       productDetails: '', // 商品详情
       productColor: '', // 商品颜色
@@ -435,7 +438,6 @@ export default {
     cvm.goodsId = cvm.$route.query._id
     cvm.searchData._id = cvm.$route.query._id
     // this.originalProductData = this.$route.params.data // 通过路由传来的商品信息
-
     cvm.getProductByGoodsId() // 通过id获取商品数据
   },
   computed: {
@@ -626,6 +628,7 @@ export default {
       this.productData.productNameAddId = this.productName + this.productId // 商品名+id
       this.productData.productNameFirstSpell = nameSpell[1] // 商品首拼（生成）
       this.productData.productNameFullSpell = nameSpell[0] // 品名全拼（生成）
+      this.productData.belongStore = this.belongStore // 商品所属店铺
       this.productData.productSeller = this.productSeller // 厂商
       this.productData.productImage = this.successBase64Image // 商品图片（已转换为base64格式的数组）
       this.productData.productDetails = this.productDetails // 商品详情
@@ -750,7 +753,7 @@ export default {
         this.productMsgBox() // 封装到productData对象
         // console.log(this.productData)
         // 发送请求并接收参数
-        this.$sendRequest.RTSPost('/rm_goods/add_goods', this.productData).then(res => {
+        this.$sendRequest.RTSPost('/rm_goods/add_goods', {productData: this.productData, userId: this.userId}).then(res => {
           if (res.data.code === 0) {
             // console.log('提交成功');
             this.uploadSuccessImage = res.data.image
@@ -861,7 +864,7 @@ export default {
         }
         console.log(updateData)
         // 发送请求并接收参数
-        this.$sendRequest.RTSPost('/rm_goods/update_goods', {updateData: updateData, _id: this.searchData._id}).then(res => {
+        this.$sendRequest.RTSPost('/rm_goods/update_goods', {updateData: updateData, _id: this.searchData._id, userId: this.userId}).then(res => {
           if (res.data.code === 0) {
             // console.log('提交修改成功');
             this.uploadSuccessImage = res.data.image

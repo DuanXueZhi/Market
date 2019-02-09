@@ -9,6 +9,9 @@ import commonIndex from '../../components/common/commonIndex'
 // var NormalLoading = commonIndex.normalLoading
 // window
 var WarningRemindWindow = commonIndex.warningRemindWindow
+var LoginWindowCom = commonIndex.loginWindow
+// 大图展示
+var ShowBigImage = commonIndex.showBigImage
 
 var bus = new Vue()
 
@@ -90,7 +93,39 @@ const allWindow = function ( // 参数说明：要绑定的父元素的id，弹�
   }
 }
 
-export default {bus, allWindow}
+// 调用大图展示组件
+const showImage = function (fatherLabel, data) {
+  console.log('调用函数展示图片')
+  var label = fatherLabel || 'body' // 利用短路现象进行空值转换
+  if (label !== 'body') { // 判断不是body从而添加 #
+    // console.log('不为 body')
+    label = '#' + label
+  }
+  data.show = true // 使组件展示
+  var ShowBigImageComponent = new ShowBigImage({
+    data: data
+  }).$mount()
+  document.querySelector(label).appendChild(ShowBigImageComponent.$el)
+}
+
+// 调用登录弹窗
+const openLoginWindow = function (fatherLabel, data, afterCloseFn, loginSuccessNextFn) { // 参数：父标签、数据、弹窗关闭所执行的函数、登录成功后执行的函数
+  console.log('调用登录弹窗')
+  var label = fatherLabel || 'body' // 利用短路现象进行空值转换
+  if (label !== 'body') { // 判断不是body从而添加 #
+    // console.log('不为 body')
+    label = '#' + label
+  }
+  data.show = true // 使组件展示
+  data.afterCloseFn = afterCloseFn || function () {} // 为空则转换为空函数
+  data.loginSuccessNextFn = loginSuccessNextFn || function () {} // 为空则转换为空函数
+  var loginWindowComponent = new LoginWindowCom({
+    data: data
+  }).$mount()
+  document.querySelector(label).appendChild(loginWindowComponent.$el)
+}
+
+export default {bus, allWindow, showImage, openLoginWindow}
 
 /*
 * 笔记
