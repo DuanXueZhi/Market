@@ -32,7 +32,7 @@
               <td><input type="checkbox" v-on:change="arrangeDBIdArray($event, user._id)" :checked="DBIdArray.indexOf(user._id) === -1? false : true"></td>
               <td>{{index + 1}}</td>
               <td>{{user.userName}}</td>
-              <td>{{user.userPassword}}</td>
+              <td>{{user.userPassword | textPasswordShow}}</td>
               <td>{{user.userSex}}</td>
               <td>{{user.telephone}}</td>
               <td>{{user.identity | EnglishTranslate}}</td>

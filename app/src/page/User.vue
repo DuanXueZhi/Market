@@ -8,6 +8,7 @@
         <!--公用菜单-->
         <router-link to="/UserRegister">店员注册【要传一个店员参数】</router-link>
         <router-link :to="{name: 'UserMsg'}">|我的信息</router-link>
+        <router-link>|我的消息</router-link>
         <router-link to="/Home">|购物车</router-link>
         <!-- 管理员列表 -->
         <div v-if="operateUser.identity === 'admin'">
@@ -22,6 +23,7 @@
           <router-link to="/Home">|我的雇员</router-link>
           <router-link to="/Home">|我的顾客</router-link>
         </div>
+        <!-- 店员列表 -->
         <div v-if="operateUser.identity === 'assistant'">
           <p style="color: red;">assistant</p>
           <router-link to="/Home">|我家顾客</router-link>

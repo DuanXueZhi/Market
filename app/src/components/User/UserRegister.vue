@@ -5,8 +5,8 @@
       <!-- 数据写法 -->
       <div>
         <p id="identity">身份<span style="color: red;" v-if="user.identity === ''">*</span>：<span style="color: dodgerblue;">{{user.identity | EnglishTranslate}}</span>注册</p>
-        <button @click="user.identity = 'onlineBuyer'" :disabled="$store.state.user.identity !== ''">在线购买者注册</button>
-        <button @click="user.identity = 'boss'" :disabled="$store.state.user.identity !== ''">商家注册（需要管理员审核）</button>
+        <button @click="user.identity = 'onlineBuyer'">在线购买者注册</button>
+        <button @click="user.identity = 'boss'">商家注册（需要管理员审核）</button>
         <button @click="user.identity = 'assistant'" :disabled="!agreeAssistantRegister && !($store.state.user.identity === 'boss')">店员注册（需要商家登录）</button>
         <!-- 以后做成顶部标签切换模式，类似‘账号密码登录’vs‘扫一扫’ -->
         <span style="color: red;" v-if="mustFilled === 'identity'">此项必选</span>

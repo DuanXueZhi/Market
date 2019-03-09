@@ -21,6 +21,11 @@ let textCutOut = (value, num) => {
   return value
 }
 
+// 密码展示
+let textPasswordShow = () => {
+  return '******'
+}
+
 // 固定英文单词转换为汉语
 let EnglishTranslate = (value) => {
   if (!value) return '空值！'
@@ -44,4 +49,4 @@ let EnglishTranslate = (value) => {
   }
 }
 
-export {textOmit, textCutOut, EnglishTranslate}
+export {textOmit, textCutOut, EnglishTranslate, textPasswordShow}

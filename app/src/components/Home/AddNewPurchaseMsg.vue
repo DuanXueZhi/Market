@@ -4,16 +4,18 @@
     <p class="AppAllExplain">{{msg}}</p>
     <!--数据写法-->
     <h3>{{purchase_id === 'add'? '到货添加' : '修改' + purchase_id + '到货信息'}}</h3>
+    <h4><span style="color: #6e06f3;">{{$jsfn.determineUserLoginSuccess().identity === 'assistant' ? $jsfn.determineUserLoginSuccess().myBoss : $jsfn.determineUserLoginSuccess().userName}}</span>商店</h4>
     <div style="text-align: center; position: relative;" v-if="purchase_id === 'add'">
       <p>{{productPurchaseDate}}，今日到货</p>
-      <p>厂商：</p>
-      <input type="text" v-model="productPurchaseSeller" v-on:input="inputFunction('purchaseSeller')">
+      <p>厂商<span style="color: red;" v-if="!productPurchaseName">*</span>：</p>
+      <input type="text" v-model="productPurchaseSeller" v-on:input="inputFunction('purchaseSeller')"><span style="color: red;" v-if="mustFilled === 'productPurchaseSeller'">此项必填</span>
       <div style="position: relative;" @click="showProductNameList">
         <p id="productName">商品名<span style="color: red;" v-if="!productPurchaseName">*</span>：</p>
         <input type="text" v-model="productPurchaseName"
                v-on:input="inputFunction('purchaseName')"
-               v-on:focus="showProductNameList; mustFilled = 'false'"
-        ><span style="color: red;" v-if="mustFilled === 'name'">此项必填</span>
+               @focus="showProductNameList; mustFilled = 'false'"
+               @blur="nameMsgHintList.show = false"
+        ><span style="color: red;" v-if="mustFilled === 'productPurchaseName'">此项必填</span>
         <div v-if="nameMsgHintList.show" style="position: absolute; left: 625px; top: 40px; width: 173px;"> <!-- 信息提示菜单 -->
           <ul style="background: #a71d5d; color: #fff;">
             <li style="border-top: 1px solid slateblue;"
@@ -23,8 +25,8 @@
                 v-for="(item, index) in msgHintListData"
                 :key="index"
                 @click="productPurchaseName = item._id"
-              ><span style="word-wrap: break-word;">{{item._id}}</span
-            ></li> <!-- word-wrap:break-word; 强制换行，防止一个单词不换行 -->
+              ><span style="word-wrap: break-word;">{{item._id}}</span>
+            </li> <!-- word-wrap:break-word; 强制换行，防止一个单词不换行 -->
           </ul>
         </div>
       </div>
@@ -294,6 +296,22 @@ export default {
       this.$el.querySelector(selector).scrollIntoView() // querySelector：css选择器，scrollIntoView：页面滚动参数默认true（顶部），false页面滚动到底部
     },
 
+    // 判空函数并展示
+    emptyShow () {
+      var location = '' // 空值位置
+      if (this.productPurchaseSeller === '') {
+        location = 'productPurchaseSeller'
+      } else if (this.productPurchaseName === '') {
+        location = 'productPurchaseName'
+      } else if (this.productPurchaseSpecificationMsg.length === 0 || this.productPurchaseSpecificationMsg[0].productPurchaseId === '') {
+        location = 'productPurchaseSpecificationMsg'
+      } else {
+        return true
+      }
+      this.mustFilled = location
+      this.goAnchor(location)
+    },
+
     // 总价、总数计算
     countTotalPrice (arrayValue) {
       console.log('计算总价')
@@ -313,10 +331,12 @@ export default {
         productPurchaseSeller: this.productPurchaseSeller, // 商品进货厂商
         productPurchaseName: this.productPurchaseName, // 商品进货名
         productPurchaseSpecificationMsg: this.productPurchaseSpecificationMsg, // 商品进货规格信息（商品id + 数量 + 进价 + 差价【 + 图片】）
+        belongStore: this.$jsfn.determineUserLoginSuccess().identity === 'assistant' ? this.$jsfn.determineUserLoginSuccess().myBoss : this.$jsfn.determineUserLoginSuccess().userName, // 信息所属店铺
         productPurchaseFreight: this.productPurchaseFreight, // 商品运费
         productPurchaseShortage: this.productPurchaseShortage, // 商品是否缺少
         productPurchaseSpecificAttention: this.productPurchaseSpecificAttention, // 特别注意
-        productPurchaseExplain: this.productPurchaseExplain// 进货商品备注
+        productPurchaseExplain: this.productPurchaseExplain, // 进货商品备注
+        operateUser: this.$jsfn.determineUserLoginSuccess().userName // 该信息的操作者
       }
     },
 
@@ -334,7 +354,7 @@ export default {
     // 展示商品名列表函数
     showProductNameList () {
       console.log('展示商品名列表函数')
-      this.nameMsgHintList.show = !this.nameMsgHintList.show
+      this.nameMsgHintList.show = true
       this.getProductNameByInput(this.productPurchaseName, 'productName')
     },
 
@@ -365,11 +385,7 @@ export default {
     // 提交进货数据
     submitPurchaseData () {
       console.log('提交进货数据')
-      if (this.productPurchaseSpecificationMsg.length === 0 || this.productPurchaseSpecificationMsg[0].productPurchaseId === '') {
-        console.log('进货信息为空')
-        this.mustFilled = 'productPurchaseSpecificationMsg'
-        this.goAnchor('#productPurchaseSpecificationMsg')
-      } else {
+      if (this.emptyShow()) {
         var productPurchaseData = this.productPurchaseMsgBox()
         this.$sendRequest.RTSPost('/rm_purchases/add_purchases', productPurchaseData).then(res => {
           if (res.data.code === 0) {

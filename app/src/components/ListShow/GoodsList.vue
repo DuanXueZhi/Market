@@ -118,7 +118,7 @@
                 </ul>
               </th>
               <th style="width: 50px; border-left: 1px solid red;">所属</th>
-              <th style="width: 70px; border-left: 1px solid red;">单品进价</th>
+              <th style="width: 70px; border-left: 1px solid red;" v-if="operateUser.identity === 'boss'">单品进价</th>
               <th style="width: 80px; border-left: 1px solid red;">单品批发价</th>
               <th style="width: 80px; border-left: 1px solid red;">单品零售价</th>
               <th style="width: 60px; border-left: 1px solid red; position: relative; cursor: pointer;"
@@ -188,10 +188,10 @@
               <td>{{addition(product.productSpecifications)}}</td>
               <td>{{product.productGenre}}</td>
               <td :title="product.belongStore">{{product.belongStore | textOmit(5)}}</td>
-              <td>{{product.productOriginalPrice}}</td>
+              <td v-if="operateUser.identity === 'boss'">{{product.productOriginalPrice}}</td>
               <td>{{product.productBatchPrice}}</td>
               <td>{{product.productSoloPrice}}</td>
-              <td :title="product.userId">{{product.userId | textOmit(5)}}</td>
+              <td :title="product.operateUser">{{product.operateUser | textOmit(5)}}</td>
               <td :title="product.productExplain">{{product.productExplain | textOmit(10)}}</td>
               <td>{{product.meta.createAt}}</td>
               <td>{{product.meta.updateAt | countDateChinese}}</td>
@@ -231,7 +231,8 @@ export default {
       },
       productHeaderData: [], // 查询到的商品搜有表头的筛选项
       headerItemShow: false, // 是否展示此表头此时的筛选项菜单
-      forecastOption: false // 预选项
+      forecastOption: false, // 预选项
+      operateUser: this.$jsfn.determineUserLoginSuccess() // 操作用户
     }
   },
   created () {

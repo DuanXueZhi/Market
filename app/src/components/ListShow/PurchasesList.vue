@@ -15,13 +15,13 @@
       <div style="float: right; margin-right: 20px;">
         <button @click="switchoverProductList(true)" v-bind="{disabled: searchData.exist}">到货信息列表</button>
       </div>
-      <div>
-        <span>时间：</span>
-        <select v-model="searchData.productPurchaseDate" v-on:change="getPurchasesDataBySearchData">
-          <option value="">全部</option>
-          <option :value="time._id" v-for="(time, index) in searchOneItemData" :key="index" @click="getPurchasesDataBySearchData">{{time._id | textCutOut(10)}}</option>
-        </select>
-      </div>
+      <!--<div>-->
+        <!--<span>时间：</span>-->
+        <!--<select v-model="searchData.productPurchaseDate" v-on:change="getPurchasesDataBySearchData">-->
+          <!--<option value="">全部</option>-->
+          <!--<option :value="time._id" v-for="(time, index) in searchOneItemData" :key="index" @click="getPurchasesDataBySearchData">{{time._id | textCutOut(10)}}</option>-->
+        <!--</select>-->
+      <!--</div>-->
       <!--到货信息列表-->
       <table>
         <thead>
@@ -32,11 +32,13 @@
             <th style="border-left: 1px solid steelblue;">商品名</th>
             <th style="border-left: 1px solid steelblue;">到货详细信息</th>
             <th style="border-left: 1px solid steelblue;">总数</th>
-            <th style="border-left: 1px solid steelblue;">总价</th>
+            <th style="border-left: 1px solid steelblue;">所属店铺</th>
+            <th style="border-left: 1px solid steelblue;" v-if="operateUser.identity === 'boss'">总价</th>
             <th style="border-left: 1px solid steelblue;">运费</th>
             <th style="border-left: 1px solid steelblue;">缺少</th>
             <th style="border-left: 1px solid steelblue; color: red;">注意</th>
             <th style="border-left: 1px solid steelblue;">备注</th>
+            <th style="border-left: 1px solid steelblue;">操作者</th>
             <th style="border-left: 1px solid steelblue;">创建时间</th>
             <th style="border-left: 1px solid steelblue;">修改时间</th>
             <th style="border-left: 1px solid steelblue;">操作</th>
@@ -53,27 +55,29 @@
                 <thead>
                   <tr>
                     <th>商品号</th>
-                    <th>进价</th>
+                    <th v-if="operateUser.identity === 'boss'">进价</th>
                     <th>数量</th>
-                    <th>价格</th>
+                    <th v-if="operateUser.identity === 'boss'">价格</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(specificMsg, msgIndex) in purchaseMsg.productPurchaseSpecificationMsg" :key="msgIndex">
                     <td>{{specificMsg.productPurchaseId}}</td>
-                    <td>{{specificMsg.productPurchaseCost}}</td>
+                    <td v-if="operateUser.identity === 'boss'">{{specificMsg.productPurchaseCost}}</td>
                     <td>{{specificMsg.productPurchaseNum}}</td>
-                    <td>{{specificMsg.productPurchaseCost * specificMsg.productPurchaseNum}}</td>
+                    <td v-if="operateUser.identity === 'boss'">{{specificMsg.productPurchaseCost * specificMsg.productPurchaseNum}}</td>
                   </tr>
                 </tbody>
               </table>
             </td>
             <td>{{countTotalPriceNum(purchaseMsg.productPurchaseSpecificationMsg).num}}</td>
-            <td>{{countTotalPriceNum(purchaseMsg.productPurchaseSpecificationMsg).sum}}</td>
+            <td>{{purchaseMsg.belongStore}}</td>
+            <td v-if="operateUser.identity === 'boss'">{{countTotalPriceNum(purchaseMsg.productPurchaseSpecificationMsg).sum}}</td>
             <td>{{purchaseMsg.productPurchaseFreight}}</td>
             <td>{{purchaseMsg.productPurchaseShortage === 'false'? '无' : purchaseMsg.productPurchaseShortage}}</td>
             <td style="color: red;">{{purchaseMsg.productPurchaseSpecificAttention === 'false'? '' : purchaseMsg.productPurchaseSpecificAttention}}</td>
             <td>{{purchaseMsg.productPurchaseExplain}}</td>
+            <td>{{purchaseMsg.operateUser}}</td>
             <td>{{purchaseMsg.meta.createAt}}</td>
             <td>{{purchaseMsg.meta.updateAt | countDateChinese}}</td>
             <td>
@@ -82,6 +86,7 @@
               <button @click="operatePurchaseMsg('admin_delete', purchaseMsg)">管理员删除</button>
             </td>
           </tr>
+          <tr>{{totalPrice}}</tr>
         </tbody>
       </table>
       <div>
@@ -104,11 +109,12 @@ export default {
         productPurchaseDate: '', // 商品到货日期筛选
         exist: true // 是否存在
       },
-      userId: '需要获取', // 用户Id
+      operateUser: this.$jsfn.determineUserLoginSuccess(), // 操作用户
       searchOneItemData: [], // 某一筛选项（日期、厂商、商品名）在目前情况下数据库中的值
       DBIdArray: [], // 到货信息_id数组(用户操作)
       allIdArray: [], // 目前所有到货信息_id数组（后台获取）
-      allItem: false // 全选按钮
+      allItem: false, // 全选按钮
+      totalPrice: 0 // 目前总价格
     }
   },
   created () {
@@ -189,6 +195,7 @@ export default {
         sum += e.productPurchaseNum * e.productPurchaseCost
         num += Number(e.productPurchaseNum)
       })
+      console.log('abc')
       return {num, sum}
     },
 

@@ -4,68 +4,7 @@
     <!--数据写法-->
     <div>
       <h3>{{goodsId === 'add'? '新品上架' : '修改' + goodsId + '商品'}}</h3>
-      <!--左侧 原数据-->
-      <!--<div style="text-align: center; float: left;" v-if="goodsId !== 'add'">-->
-        <!--<h4>原数据</h4>-->
-        <!--<p>货号：</p>-->
-        <!--<input type="text" disabled placeholder="productId" v-model="originalProductData.productId">-->
-        <!--<p>商品名：</p>-->
-        <!--<input type="text" disabled placeholder="productName" v-model="originalProductData.productName">-->
-        <!--<p>厂商：</p>-->
-        <!--<input type="text" disabled placeholder="productSeller" v-model="originalProductData.productSeller">-->
-        <!--<div>-->
-          <!--<p>商品图片：</p>-->
-          <!--<ul>-->
-            <!--&lt;!&ndash;已输入个数&ndash;&gt;-->
-            <!--<li>-->
-              <!--<span>{{(originalProductData.productImage.length === 0)? '未上传任何图片' : '已上传成功'}}</span-->
-              <!--&gt;<span style="color: red;">{{originalProductData.productImage.length}}</span-->
-              <!--&gt;<span>张，</span>-->
-            <!--</li>-->
-            <!--&lt;!&ndash;已输入部分&ndash;&gt;-->
-            <!--<li style="display: inline-block;margin-left: 20px;position: relative;" v-for="(item, index) in originalProductData.productImage" :key="item[index]">-->
-              <!--<img style="display: inline-block;width: 200px;height: 200px;border: 1px solid black;" v-bind:src="item" v-bind:alt="item">-->
-            <!--</li>-->
-          <!--</ul>-->
-        <!--</div>-->
-        <!--<p>详情：</p>-->
-        <!--<input type="text" disabled placeholder="productDetails" v-model="originalProductData.productDetails">-->
-        <!--<div>-->
-          <!--<p>颜色：</p>-->
-          <!--<input type="text" disabled placeholder="productColor" v-model="originalProductData.productColor">-->
-          <!--<br>-->
-          <!--<button style="width: 60px; height: 24px; margin: 2px 5px;" v-for="(color, index) in serverColorData" :key="color.value" :title="index + 1" @click="productColor = color" v-if="color !== ''">{{color}}</button>-->
-        <!--</div>-->
-        <!--<div>-->
-          <!--<p>分类：</p>-->
-          <!--<input type="text" disabled placeholder="productGenre" v-model="originalProductData.productGenre">-->
-          <!--<br>-->
-          <!--<button style="width: 60px; height: 24px; margin: 2px 5px;" v-for="(genre, index) in serverGenreData" :key="genre.value" :title="index + 1" @click="productGenre = genre" v-if="genre !== ''">{{genre}}</button>-->
-        <!--</div>-->
-        <!--<div style="display: inline-block; width: 600px; text-align: left;">-->
-          <!--<p>商品规格：</p>-->
-          <!--<div>-->
-            <!--<span>所有规格：</span-->
-            <!--&gt;<input type="text" disabled v-model="ruleSizes"-->
-            <!--&gt;<span>总数（条）：</span-->
-            <!--&gt;<input type="number" disabled v-model="productSum">-->
-          <!--</div>-->
-          <!--<div v-for="(item, index) in originalProductData.productSpecifications" :key="item.size[index]">-->
-            <!--<span>尺码{{index + 1}}：</span-->
-            <!--&gt;<input type="text" disabled v-model="item.size" v-on:blur="countProductSize"-->
-            <!--&gt;<span>数量（条）：</span-->
-            <!--&gt;<input type="number" disabled v-model="item.number" v-on:blur="countProductSum">-->
-          <!--</div>-->
-        <!--</div>-->
-        <!--<p>进价（元）：</p>-->
-        <!--<input type="number" disabled placeholder="productOriginalPrice" v-model="originalProductData.productOriginalPrice">-->
-        <!--<p>批量售价（元）：</p>-->
-        <!--<input type="number" disabled placeholder="productBatchPrice" v-model="originalProductData.productBatchPrice">-->
-        <!--<p>零售价（元）：</p>-->
-        <!--<input type="number" disabled placeholder="productSoloPrice" v-model="originalProductData.productSoloPrice">-->
-        <!--<p>备注：</p>-->
-        <!--<input type="text" disabled placeholder="productExplain" v-model="originalProductData.productExplain">-->
-      <!--</div>-->
+      <h4><span style="color: #6e06f3;">{{belongStore}}</span>&nbsp;商店</h4>
       <!--右侧 新数据-->
       <div style="text-align: center;" v-if="goodsId === 'add'">
         <h4>可修改数据</h4>
@@ -131,8 +70,8 @@
           </div>
           <span @click="addSpecifications"><i class="iconfont icon-tianjia" style="font-size: 22px; cursor: pointer;"></i></span>
         </div>
-        <p>进价（元）：</p>
-        <input type="number" placeholder="productOriginalPrice" v-model="productOriginalPrice">
+        <p v-if="$jsfn.determineUserLoginSuccess().identity === 'boss'">进价（元）：</p>
+        <input type="number" placeholder="productOriginalPrice" v-model="productOriginalPrice" v-if="$jsfn.determineUserLoginSuccess().identity === 'boss'">
         <p>批量售价（元）：</p>
         <input type="number" placeholder="productBatchPrice" v-model="productBatchPrice">
         <p>零售价（元）：</p>
@@ -298,7 +237,7 @@
               <span @click="addSpecifications"><i class="iconfont icon-tianjia" style="font-size: 22px; cursor: pointer;"></i></span>
             </div>
           </li>
-          <li style="border-top: 1px solid #999;" :style="{background: updateItem.productOriginalPrice === true ? '#b2e5b2' : '#ffdbdb'}">
+          <li style="border-top: 1px solid #999;" :style="{background: updateItem.productOriginalPrice === true ? '#b2e5b2' : '#ffdbdb'}" v-if="$jsfn.determineUserLoginSuccess().identity === 'boss'">
             <div style="display: inline-block; width: 45%;"> <!--左-->
               <p>进价（元）：</p>
               <input type="number" disabled placeholder="productOriginalPrice" v-model="originalProductData.productOriginalPrice">
@@ -354,17 +293,15 @@
 </template>
 
 <script>
-// import * as main from '../../assets/js/jsfn'
-// import * as Https from '../../assets/js/sendRequest'
-
 export default {
   name: 'add-new-goods',
   data () {
+    var vm = this
     return {
       msg: '添加新商品界面',
       productId: '', // 商品号(若是一号多色，要加上颜色)
       productName: '', // 商品名 // 品名首拼（生成） // 品名全拼（生成）
-      belongStore: '通过用户身份判断得到第一店长即店铺名称', //  商品所属商家
+      belongStore: vm.$jsfn.determineUserLoginSuccess().identity === 'assistant' ? vm.$jsfn.determineUserLoginSuccess().myBoss : vm.$jsfn.determineUserLoginSuccess().userName, //  商品所属商家
       productSeller: '', // 厂商
       productDetails: '', // 商品详情
       productColor: '', // 商品颜色
@@ -375,7 +312,6 @@ export default {
       productOriginalPrice: 0, // 商品进价
       productBatchPrice: 0, // 商品批量售价
       productSoloPrice: 0, // 商品零售价
-      userId: '直接获取用户名，在后台兑换为users_id', // 商品操作者
       productExplain: '暂无', // 商品备注
       exist: true, // 是否存在（删除时使用）
       // --------------------------------本业数据---------------------------- \\
@@ -396,7 +332,6 @@ export default {
         productOriginalPrice: 0, // 商品进价
         productBatchPrice: 0, // 商品批量售价
         productSoloPrice: 0, // 商品零售价
-        userId: '直接获取用户名，在后台兑换为users_id', // 商品操作者
         productExplain: '暂无', // 商品备注
         exist: true // 是否存在（删除时使用）
       },
@@ -439,6 +374,21 @@ export default {
     cvm.searchData._id = cvm.$route.query._id
     // this.originalProductData = this.$route.params.data // 通过路由传来的商品信息
     cvm.getProductByGoodsId() // 通过id获取商品数据
+    this.operateUser = this.$jsfn.determineUserLoginSuccess() // 调用'src/assets/js/jsfn.js'中判断用户登录函数
+    if (this.operateUser) {
+      console.log('User用户已登录')
+      // 判断是否是assistant身份，并判断该用户myBoss字段有无值，【无：提示用户选择商家；有：不做提示】
+      if (this.operateUser.identity === 'assistant') {
+        console.log('身份是店员')
+      }
+    } else {
+      console.log('User用户未登录', this.operateUser)
+      this.$message({
+        type: 'warning',
+        message: '请先登录'
+      })
+      cvm.$windowFn.openLoginWindow('body', {}, function () { cvm.$router.push('/Home') }, function () { cvm.$router.push('/Home/AddNewGoods?_id=add') })
+    }
   },
   computed: {
     updateValue () { // 两者相比取后者 公用（用于调整整合修改值）
@@ -559,7 +509,8 @@ export default {
     // 获取标签（数据库中已有的字段值）
     getTitleMsg () {
       // 获取标签（数据库中已有的字段值）
-      this.$sendRequest.RTSGet('/rm_goods/find_title', {userId: '用户id'}).then(res => {
+      var vm = this
+      this.$sendRequest.RTSGet('/rm_goods/find_title', {operateUser: vm.$jsfn.determineUserLoginSuccess()}).then(res => {
         // console.log('查询颜色、分类字段标签值')
         if (res.data.code === 0) {
           // console.log('查询成功!')
@@ -577,11 +528,12 @@ export default {
     getProductByGoodsId () {
       var vm = this
       if (this.searchData._id !== 'add') {
-        this.$sendRequest.RTSPost('/rm_goods/goods_by_searchData', {userId: '获取用户Id', searchData: this.searchData}).then(res => {
+        this.$sendRequest.RTSPost('/rm_goods/goods_by_searchData', {operateUser: vm.$jsfn.determineUserLoginSuccess(), searchData: vm.searchData}).then(res => {
           if (res.data.code === 0) {
             this.originalProductData = res.data.data
             // console.log(this.originalProductData)
             vm.updateItem = vm.updateUpdateItemValue().updateItem // 规整总和修改值（要在获取数据之后）
+            vm.productOriginalPrice = vm.originalProductData.productOriginalPrice
           }
         })
       } else {
@@ -638,7 +590,7 @@ export default {
       this.productData.productOriginalPrice = this.productOriginalPrice // 商品进价
       this.productData.productBatchPrice = this.productBatchPrice // 商品批量售价
       this.productData.productSoloPrice = this.productSoloPrice // 商品零售价
-      this.productData.userId = this.userId // 商品操作者
+      this.productData.operateUser = this.$jsfn.determineUserLoginSuccess().userName // 商品操作者名
       this.productData.productExplain = this.productExplain // 商品备注
       this.productData.exist = this.exist // 是否存在（删除时使用）
     },
@@ -748,12 +700,13 @@ export default {
     // 提交（添加）商品
     addGoods () {
       console.log('提交商品')
+      var vm = this
       this.emptyShow() // 判断为空
       if (this.mustFilled) {
         this.productMsgBox() // 封装到productData对象
         // console.log(this.productData)
         // 发送请求并接收参数
-        this.$sendRequest.RTSPost('/rm_goods/add_goods', {productData: this.productData, userId: this.userId}).then(res => {
+        this.$sendRequest.RTSPost('/rm_goods/add_goods', {productData: this.productData, operateUser: vm.$jsfn.determineUserLoginSuccess()}).then(res => {
           if (res.data.code === 0) {
             // console.log('提交成功');
             this.uploadSuccessImage = res.data.image
@@ -844,7 +797,7 @@ export default {
     // 提交（修改后）商品数据
     submitUpdateGoods () {
       console.log('提交修改后商品')
-      console.log(this.updateItem)
+      var vm = this
       this.emptyShow()
       if (this.mustFilled === true) {
         var updateData = {} // 真正修改的项和值
@@ -864,7 +817,7 @@ export default {
         }
         console.log(updateData)
         // 发送请求并接收参数
-        this.$sendRequest.RTSPost('/rm_goods/update_goods', {updateData: updateData, _id: this.searchData._id, userId: this.userId}).then(res => {
+        this.$sendRequest.RTSPost('/rm_goods/update_goods', {updateData: updateData, _id: this.searchData._id, operateUser: vm.$jsfn.determineUserLoginSuccess()}).then(res => {
           if (res.data.code === 0) {
             // console.log('提交修改成功');
             this.uploadSuccessImage = res.data.image

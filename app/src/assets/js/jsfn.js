@@ -524,6 +524,8 @@ const updateStoreUserMsgByCookiesValue = function () {
     userMsg.userId = getCookies().userId ? getCookies().userId : ''
     userMsg.userName = getCookies().userName ? getCookies().userName : ''
     userMsg.identity = getCookies().identity ? getCookies().identity : ''
+    userMsg.myBoss = getCookies().identity ? getCookies().myBoss : ''
+    userMsg.chooseStoreOwner = getCookies().identity ? getCookies().chooseStoreOwner : ''
   }
   if (userMsg.userId !== '' || userMsg.userName !== '' || userMsg.identity !== '') { // 有值就更新
     store.commit('updateUserInfo', userMsg)
